@@ -1,8 +1,12 @@
 import { combineReducers } from 'redux';
 import list from './list';
+import devices from './devices';
+import user from './user';
 
 const rootReducer = combineReducers({
-  list, // shorthand for lists: lists
+  list,
+  devices,
+  user
 });
 
 export default rootReducer;

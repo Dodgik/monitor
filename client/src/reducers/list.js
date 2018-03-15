@@ -6,7 +6,7 @@ export default (state = LISTS, action) => {
     case LIST_ACTIONS.ITEM_PREVIEW:
       return { ...state, itemPreview: state.items[action.name.toUpperCase()] };
     case LIST_ACTIONS.ITEM_VIEW:
-      return { ...state, itemView: state.items[action.name.toUpperCase()] };
+      return { ...state, itemView: state.items[action.name.toUpperCase()], active: action.name };
     case LIST_ACTIONS.ITEM_CLEAR:
       return { ...state, itemView: null };
     case LIST_ACTIONS.ITEM_ADD: {

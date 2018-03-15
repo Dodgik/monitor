@@ -4,6 +4,7 @@ import ItemView from '../components/list_item_view';
 
 const mapStateToProps = state => ({
   item: state.list.itemView,
+  defaultItemName: state.list.defaultItemName,
 });
 
 const mapDispatchToProps = dispatch => ({

@@ -1,5 +1,5 @@
 import { connect } from 'react-redux';
-import { previewItem } from '../actions/list_actions';
+import { viewItem } from '../actions/list_actions';
 import ListItems from '../components/list_items';
 
 /*
@@ -9,7 +9,8 @@ For example, here we are retrieving the list of items from the redux store.
 Whenever this list changes, any component that is using this list of item will re-render.
  */
 const mapStateToProps = state => ({
-  listItems: state.list.items,
+  active: state.list.active,
+  items: state.list.items,
 });
 
 /*
@@ -17,8 +18,8 @@ This is a redux specific function.
 http://redux.js.org/docs/api/bindActionCreators.html
  */
 const mapDispatchToProps = dispatch => ({
-  previewItem: (name) => {
-    dispatch(previewItem(name));
+  viewItem: (name) => {
+    dispatch(viewItem(name));
   },
 });
 

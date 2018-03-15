@@ -1,4 +1,4 @@
-# ReactJS + ExpressJS
+# Monitor
 
 	npm install
 
@@ -27,5 +27,7 @@ npm i --save-dev babel-core babel-loader babel-preset-es2015 babel-preset-react 
 
 npm i --save express-session body-parser tedious sequelize passport passport-local bcrypt-nodejs
 npm i --save-dev axios
+
+npm i --save redux-saga isomorphic-fetch
 
 npx run server\db\build.js

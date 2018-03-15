@@ -1,11 +1,11 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import { Provider } from 'react-redux';
-import { createStore } from 'redux';
-import {
-  BrowserRouter,
-} from 'react-router-dom';
+import { createStore, applyMiddleware } from 'redux';
+import { BrowserRouter } from 'react-router-dom';
+import createSagaMiddleware from 'redux-saga'
 import { AppContainer } from 'react-hot-loader';
+
 import reducers from './reducers/index';
 import App from './app';
 
@@ -15,9 +15,16 @@ Here we are getting the initial state injected by the server. See routes/index.j
 const initialState = window.__INITIAL_STATE__; // eslint-disable-line
 const user = window.user; // eslint-disable-line
 
-console.warn('-->reducers: ', reducers)
-console.warn('-->initialState: ', initialState)
+//console.warn('-->reducers: ', reducers)
+//console.warn('-->initialState: ', initialState)
 const store = createStore(reducers, initialState);
+/*
+const sagaMiddleware = createSagaMiddleware({ sagaMonitor })
+const store = {
+  ...createStore(reducers, initialState, applyMiddleware(sagaMiddleware)),
+  runSaga: sagaMiddleware.run,
+}
+*/
 window.store = store;
 
 /*

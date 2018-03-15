@@ -47,7 +47,7 @@ div, p, span {
   top: 0;
   left: 0;
   z-index: 1;
-  width: 15rem;
+  width: 18rem;
 }
 
 .header {
@@ -58,4 +58,17 @@ div, p, span {
     text-align: center;
   }
   border-bottom: 2px solid gray;
+}
+
+.list_items {
+  flex-wrap: wrap;
+
+  button {
+    border-color: #17a2b8;
+  }
+}
+.nav-tabs .nav-link {
+  color: #fff;
+  background-color: #7f919e;
+  border-color: #dee2e6 #dee2e6 #fff;
 }
