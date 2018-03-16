@@ -1,6 +1,6 @@
 import React, { PropTypes, Component } from 'react';
 import { connect } from 'react-redux';
-import { previewItem, viewItem, addItem, removeItem } from '../actions/devices_actions';
+import { previewItem, viewItem, addItem, removeItem, requestAddDevice, requestRemoveDevice } from '../actions/devices_actions';
 //import ItemView from '../components/list_item_view';
 
 class Devices extends Component {
@@ -39,13 +39,13 @@ class Devices extends Component {
 
   render() {
     console.warn('-->Devices.render:', this.props);
-    const { items } = this.props.devices;
+    const { list } = this.props.devices;
 
     return (
       <div className="devices">
         <ul className="list-group list-group-item-action">
           {
-            items.map((device) => {
+            list.map((device) => {
               let className = 'list-group-item list-group-item-action d-flex justify-content-between align-items-center list-group-item-primary';
               return (
                 <li key={device.id} className={className} onClick={this.handleShowItem.bind(this, device)} style={{ cursor: 'pointer' }}>
@@ -88,11 +88,11 @@ const mapDispatchToProps = dispatch => ({
   viewItem: (name) => {
     dispatch(viewItem(name));
   },
-  addItem: (item) => {
-    dispatch(addItem(item));
+  addItem: (device) => {
+    dispatch(requestAddDevice(device));
   },
   removeItem: (id) => {
-    dispatch(removeItem(id));
+    dispatch(requestRemoveDevice(id));
   },
 });
 

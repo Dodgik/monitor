@@ -8,6 +8,7 @@ module.exports = {
   context: path.join(__dirname, '../client'),
   devtool: 'source-map',
   entry: [
+    'babel-polyfill',
     './src/index.js',
     './res/scss/main.scss',
   ],

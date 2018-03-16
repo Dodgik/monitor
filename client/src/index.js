@@ -8,6 +8,7 @@ import { AppContainer } from 'react-hot-loader';
 
 import reducers from './reducers/index';
 import App from './app';
+import rootSaga from './sagas'
 
 /*
 Here we are getting the initial state injected by the server. See routes/index.js for more details
@@ -17,14 +18,14 @@ const user = window.user; // eslint-disable-line
 
 //console.warn('-->reducers: ', reducers)
 //console.warn('-->initialState: ', initialState)
-const store = createStore(reducers, initialState);
-/*
-const sagaMiddleware = createSagaMiddleware({ sagaMonitor })
+//const store = createStore(reducers, initialState);
+
+const sagaMiddleware = createSagaMiddleware();
 const store = {
   ...createStore(reducers, initialState, applyMiddleware(sagaMiddleware)),
   runSaga: sagaMiddleware.run,
-}
-*/
+};
+store.runSaga(rootSaga);
 window.store = store;
 
 /*

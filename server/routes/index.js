@@ -2,6 +2,7 @@ import express from 'express';
 var passport = require('passport')
 var session = require('express-session')
 var bodyParser = require('body-parser')
+import devices from './devices';
 import ssr from './ssr';
 
 const app = express();
@@ -19,36 +20,7 @@ app.use(passport.session()); // persistent login sessions
 var User = require('../db/models/users');
 require('../config/passport/passport.js')(passport, User);
 
-
-app.post('/a/devices/add', function (req, res, next) {
-  console.log('devices-add req: ', req);
-  res.json({ success: true, message: req });
-});
-app.post('/a/devices', function (req, res, next) {
-  console.log('devices-add req: ', req);
-  const devicesItems = [
-    {
-      id: 1,
-      name: 'pc_device',
-      default: true,
-      title: 'My PC',
-      description: 'To use Devices please sign up.',
-    },
-    {
-      id: 2,
-      name: 'iPod',
-      title: 'My iPod',
-      description: 'To use Devices please sign up.',
-    },
-    {
-      id: 3,
-      name: 'iPad',
-      title: 'My iPad Mini',
-      description: 'To use Devices please sign up.',
-    }
-  ];
-  res.json({ success: true, message: devicesItems });
-});
+app.use('/a/devices', devices);
 
 app.post('/login', function (req, res, next) {
   passport.authenticate('local-signInOrUp', function (err, user, info) {

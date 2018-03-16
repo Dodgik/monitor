@@ -7,6 +7,7 @@ module.exports = {
   context: path.join(__dirname, '../client'),
   devtool: 'inline-source-map',
   entry: [
+    'babel-polyfill',
     'react-hot-loader/patch',
     'webpack-dev-server/client?http://localhost:8080',
     'webpack/hot/only-dev-server',
