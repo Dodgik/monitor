@@ -11,6 +11,8 @@ export const REQUEST_DEVICES = 'REQUEST_DEVICES'
 export const RECEIVE_DEVICES = 'RECEIVE_DEVICES'
 export const REQUEST_ADD_DEVICE = 'REQUEST_ADD_DEVICE'
 export const RECEIVE_ADD_DEVICE = 'RECEIVE_ADD_DEVICE'
+export const REQUEST_SET_DEVICE = 'REQUEST_SET_DEVICE'
+export const RECEIVE_SET_DEVICE = 'RECEIVE_SET_DEVICE'
 export const REQUEST_REMOVE_DEVICE = 'REQUEST_REMOVE_DEVICE'
 export const RECEIVE_REMOVE_DEVICE = 'RECEIVE_REMOVE_DEVICE'
 export const SELECT_REDDIT = 'SELECT_REDDIT'
@@ -33,6 +35,16 @@ export const requestAddDevice = (device) => ({
 
 export const receiveAddDevice = (device) => ({
   type: RECEIVE_ADD_DEVICE,
+  device,
+})
+
+export const requestSetDevice = (device) => ({
+  type: REQUEST_SET_DEVICE,
+  device,
+})
+
+export const receiveSetDevice = (device) => ({
+  type: RECEIVE_SET_DEVICE,
   device,
 })
 

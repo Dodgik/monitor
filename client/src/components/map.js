@@ -5,24 +5,40 @@ import {
     withGoogleMap,
     GoogleMap,
     Marker,
+    InfoWindow,
 } from 'react-google-maps';
+import { connect } from 'react-redux';
 
 
 const GMap = compose(
-    withProps({
-        googleMapURL: "https://maps.googleapis.com/maps/api/js?key=AIzaSyAWXZwnl9PDC6_pu6I6vfODtuJ3BipQibY&v=3.exp&libraries=geometry,drawing,places",
-        loadingElement: <div style={{ height: `100%` }} />,
-        containerElement: <div style={{ height: `100%` }} id="map" />,
-        mapElement: <div style={{ height: `100%` }} />,
-    }),
-    withScriptjs,
-    withGoogleMap,
+  withProps({
+    googleMapURL: "https://maps.googleapis.com/maps/api/js?key=AIzaSyAWXZwnl9PDC6_pu6I6vfODtuJ3BipQibY&v=3.exp&libraries=geometry,drawing,places",
+    loadingElement: <div style={{ height: `100%` }} />,
+    containerElement: <div style={{ height: `100%` }} id="map" />,
+    mapElement: <div style={{ height: `100%` }} />,
+  }),
+  withScriptjs,
+  withGoogleMap,
 )((props) =>
-    <GoogleMap zoom={props.zoom} center={props.center}>
-        {props.markers.map((marker, index) =>
-            <Marker key={index} position={marker.position} onClick={props.onMarkerClick} />
-        )}
-    </GoogleMap>
+  <GoogleMap zoom={props.zoom} center={props.center}>
+    {props.markers.map((marker, index) =>
+      <Marker key={index} position={marker.position} onClick={props.onMarkerClick} />
+    )}
+    {props.devices.map((device, index) => {
+      if (device.latitude) {
+        return (
+          <Marker key={device.id} position={{ lat: device.latitude, lng: device.longitude }} onClick={props.onMarkerClick} title={device.name} >
+            <InfoWindow style={{ backgroundColor: `yellow` }} className="vas-1">
+              <div style={{ backgroundColor: `yellow` }}>
+                {device.name}
+              </div>
+            </InfoWindow>
+          </Marker>
+        )
+      }
+    }
+    )}
+  </GoogleMap>
 );
 
 
@@ -41,9 +57,6 @@ class Map extends React.PureComponent {
         console.log('---is componentDidMount:')
         this.delayedShowMarker()
         this.getCurrentPosition()
-
-        console.log('---is componentDidMount2:')
-
     }
 
     delayedShowMarker = () => {
@@ -82,16 +95,30 @@ class Map extends React.PureComponent {
     }
 
     render() {
-        return (
-            <GMap
-                isMarkerShown={this.state.isMarkerShown}
-                onMarkerClick={this.handleMarkerClick}
-                center={this.state.center}
-                markers={this.state.markers}
-                zoom={this.state.zoom}
-            />
-        )
+      console.warn('---Map: render->props: ', this.props);
+      return (
+        <GMap
+          isMarkerShown={this.state.isMarkerShown}
+          onMarkerClick={this.handleMarkerClick}
+          center={this.state.center}
+          markers={this.state.markers}
+          zoom={this.state.zoom}
+          devices={this.props.devices.list}
+        />
+      )
     }
 }
 
-export default Map;
+const mapStateToProps = state => ({
+  devices: state.devices,
+});
+
+
+const mapDispatchToProps = dispatch => ({
+  viewItem: (name) => {
+    dispatch(viewItem(name));
+  },
+});
+
+export default connect(mapStateToProps, mapDispatchToProps)(Map);
+//export default Map;

@@ -28,6 +28,13 @@ export function* fetchDevices() {
   yield put(actions.receiveDevices(list))
 }
 
+export function* subscribeFetchDevice() {
+  while (true) {
+    yield take(actions.REQUEST_DEVICES)
+    yield call(fetchDevices)
+  }
+}
+
 
 export function addDeviceApi(data) {
   let body = JSON.stringify(data);
@@ -49,6 +56,29 @@ export function* subscribeAddDevice() {
     yield call(addDevice, device)
   }
 }
+
+
+export function setDeviceApi(data) {
+  let body = JSON.stringify(data);
+  const initProps = Object.assign(postProps, { body: body });
+  return fetch(`http://localhost:3000/a/devices/set`, initProps)
+    .then(response => response.json())
+    .then(json => json)
+}
+
+export function* setDevice(data) {
+  yield put(actions.requestSetDevice())
+  const device = yield call(setDeviceApi, data)
+  yield put(actions.receiveSetDevice(device))
+}
+
+export function* subscribeSetDevice() {
+  while (true) {
+    const { device } = yield take(actions.REQUEST_SET_DEVICE)
+    yield call(setDevice, device)
+  }
+}
+
 
 
 export function removeDeviceApi(id) {
@@ -100,6 +130,9 @@ export default function* root() {
   yield fork(startup)
   yield fork(nextRedditChange)
   yield fork(invalidateReddit)
+
+  yield fork(subscribeFetchDevice)
   yield fork(subscribeAddDevice)
+  yield fork(subscribeSetDevice)
   yield fork(subscribeRemoveDevice)
 }

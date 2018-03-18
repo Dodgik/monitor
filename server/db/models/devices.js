@@ -23,6 +23,16 @@ const Device = dbSession.define('device', {
     allowNull: false,
     notEmpty: true,
     unique: false
+  },
+  latitude: {
+    type: Sequelize.DECIMAL(10, 8),
+    allowNull: true,
+    unique: false
+  },
+  longitude: {
+    type: Sequelize.DECIMAL(11, 8),
+    allowNull: true,
+    unique: false
   }
 });
 

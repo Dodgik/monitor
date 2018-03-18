@@ -6,6 +6,7 @@ import * as actions from '../actions/devices_actions'
 const devices = {
   isFetching: false,
   isAdding: false,
+  isChanging: false,
   isRemoving: false,
   list: []
 };
@@ -30,6 +31,18 @@ export default (state = devices, action) => {
         ...state,
         isRemoving: false,
       }
+
+    case actions.REQUEST_SET_DEVICE:
+      return { ...state, isChanging: true }
+    case actions.RECEIVE_SET_DEVICE:
+      state.list = state.list.map(function (device) {
+        return device.id == action.device.id ? action.device : device;
+      });
+      return {
+        ...state,
+        isChanging: false,
+      }
+
 
     case actions.REQUEST_REMOVE_DEVICE:
       return { ...state, isRemoving: true }

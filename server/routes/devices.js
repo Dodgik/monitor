@@ -31,6 +31,7 @@ router.use(function (req, res, next) {
   res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
   next();
 });
+
 router.post('/add', function (req, res, next) {
   //console.log('devices-add: ', req.body);
   let user_id = 1;
@@ -53,6 +54,37 @@ router.post('/add', function (req, res, next) {
     res.json(err);
   });
 });
+
+router.post('/set', function (req, res, next) {
+  //console.log('devices-set: ', req.body);
+  let user_id = 1;
+  if (req.isAuthenticated() && req.user) {
+    user_id = req.user.id
+  }
+  const id = req.body.id;
+  const name = req.body.name;
+  const device = {
+    id: id,
+    user_id: user_id
+  }
+  //device.id = Math.floor(Math.random() * (1000 - 4 + 1)) + 4;
+
+  dbSession.transaction(function (t) {
+    return Device.update({ name: name }, { where: device, transaction: t });
+  }).then(function (result) {
+    console.log('devices-set commeted: ', result);
+    Device.findById(id).then(upDevice => {
+      res.json({ 'id': upDevice.id, 'name': upDevice.name, 'latitude': upDevice.latitude, 'longitude': upDevice.longitude });
+    }).catch(function (err) {
+      console.log('devices-set-find rejected: ', err);
+      res.json(err);
+    });
+  }).catch(function (err) {
+    console.log('devices-set rejected: ', err);
+    res.json(err);
+  });
+});
+
 router.post('/remove', function (req, res, next) {
   //console.log('devices-remove: ', req.body.id);
   //res.json({ id: req.body.id });
@@ -83,7 +115,7 @@ router.post('/', function (req, res, next) {
   }
 
   Device.findAll({
-    attributes: ['id', 'name'],
+    attributes: ['id', 'name', 'latitude', 'longitude'],
     where: { user_id: user_id }
   }).then(devices => {
     res.json(devices);
