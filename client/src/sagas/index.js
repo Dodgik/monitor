@@ -103,6 +103,28 @@ export function* subscribeRemoveDevice() {
 }
 
 
+export function setDevicePositionApi(data) {
+  let body = JSON.stringify(data);
+  const initProps = Object.assign(postProps, { body: body });
+  return fetch(`http://localhost:3000/a/devices/pos`, initProps)
+    .then(response => response.json())
+    .then(json => json)
+}
+
+export function* setDevicePosition(data) {
+  yield put(actions.requestSetDevicePosition())
+  const device = yield call(setDevicePositionApi, data)
+  yield put(actions.receiveSetDevicePosition(device))
+}
+
+export function* subscribeSetDevicePosition() {
+  while (true) {
+    const { device } = yield take(actions.REQUEST_SET_DEVICE_POSITION)
+    yield call(setDevicePosition, device)
+  }
+}
+
+
 export function* invalidateReddit() {
   while (true) {
     const { reddit } = yield take(actions.INVALIDATE_REDDIT)
@@ -135,4 +157,5 @@ export default function* root() {
   yield fork(subscribeAddDevice)
   yield fork(subscribeSetDevice)
   yield fork(subscribeRemoveDevice)
+  yield fork(subscribeSetDevicePosition)
 }

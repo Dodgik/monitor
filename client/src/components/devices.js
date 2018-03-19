@@ -15,9 +15,11 @@ class Device extends Component {
     }
   }
   
-  handleShowDevice(item, e) {
-    console.warn('-->Device.handleShowDevice: ', item);
+  handleFocusDevice(item, e) {
+    console.warn('-->Device.handleFocusDevice: ', item);
+    e.stopPropagation();
     e.preventDefault();
+    this.props.setFocusDevice(this.props.device);
   }
 
   handleOpenEditForm(e) {
@@ -41,6 +43,13 @@ class Device extends Component {
     this.props.removeItem(id);
   }
 
+  handleSetCurrent(e) {
+    console.warn('-->Device.handleSetCurrent: ', this.props.device);
+    e.stopPropagation();
+    e.preventDefault();
+    this.props.setCurrentDevice(this.props.device);
+  }
+
   onNameChange(e) {
     var name = this.refs.deviceName.value;
     console.warn('-->Device.onNameChange: ', name);
@@ -51,8 +60,12 @@ class Device extends Component {
     console.warn('-->Device.render:', this.props);
     const { device } = this.props;
     const { id, name } = device;
+    const { currentDeviceId, focusDeviceId } = this.props.devices;
 
     let className = 'list-group-item list-group-item-action d-flex justify-content-between align-items-center list-group-item-primary';
+    if (id == focusDeviceId) {
+      className += ' list-group-item-warning'
+    }
     return (
       <li key={id} className={className}>
         {this.state.showEditForm ? (
@@ -63,13 +76,14 @@ class Device extends Component {
             <button type="submit" className="btn btn-primary" onClick={this.handleEditDevice.bind(this)}>Save</button>
             <button type="button" className="btn btn-secondary float-right" onClick={this.handleOpenEditForm.bind(this)}>Close</button>
             <button type="button" className="btn btn-danger btn-block mt-1" onClick={this.handleRemoveItem.bind(this, id)}>Remove</button>
+            <button type="button" className="btn btn-info btn-block mt-1" onClick={this.handleSetCurrent.bind(this)}>Set As Current</button>
           </div>
         ) : (
           <div className="device-item d-flex justify-content-between align-items-center w-100">
-            {name}
+            {currentDeviceId == id ? (<span className="font-weight-bold">{name}</span>) : (<span>{name}</span>)}
             <div className="device-actions dropdown">
               <button type="button" className="navbar-toggler-icon mr-3" onClick={this.handleOpenEditForm.bind(this)}></button>
-              <button type="button" className="badge badge-warning" onClick={this.handleShowDevice.bind(this, device)}>-></button>
+              <button type="button" className="badge badge-warning" onClick={this.handleFocusDevice.bind(this, device)}>-></button>
             </div>
           </div>
         )}
@@ -159,6 +173,12 @@ const mapDispatchToProps = dispatch => ({
   },
   removeItem: (id) => {
     dispatch(devicesActions.requestRemoveDevice(id));
+  },
+  setCurrentDevice: (device) => {
+    dispatch(devicesActions.setCurrentDevice(device));
+  },
+  setFocusDevice: (device) => {
+    dispatch(devicesActions.setFocusDevice(device));
   },
 });
 

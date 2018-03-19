@@ -30,5 +30,6 @@ npm i --save-dev axios
 npm i --save-dev babel-polyfill
 
 npm i --save redux-saga isomorphic-fetch
+npm i --save react-cookies
 
 npx run server\db\build.js

@@ -15,6 +15,12 @@ export const REQUEST_SET_DEVICE = 'REQUEST_SET_DEVICE'
 export const RECEIVE_SET_DEVICE = 'RECEIVE_SET_DEVICE'
 export const REQUEST_REMOVE_DEVICE = 'REQUEST_REMOVE_DEVICE'
 export const RECEIVE_REMOVE_DEVICE = 'RECEIVE_REMOVE_DEVICE'
+export const SET_CURRENT_DEVICE = 'SET_CURRENT_DEVICE'
+export const SET_FOCUS_DEVICE = 'SET_FOCUS_DEVICE'
+
+export const REQUEST_SET_DEVICE_POSITION = 'REQUEST_SET_DEVICE_POSITION'
+export const RECEIVE_SET_DEVICE_POSITION = 'RECEIVE_SET_DEVICE_POSITION'
+
 export const SELECT_REDDIT = 'SELECT_REDDIT'
 export const INVALIDATE_REDDIT = 'INVALIDATE_REDDIT'
 
@@ -57,6 +63,27 @@ export const receiveRemoveDevice = (device) => ({
   type: RECEIVE_REMOVE_DEVICE,
   device,
 })
+
+export const setCurrentDevice = (device) => ({
+  type: SET_CURRENT_DEVICE,
+  device,
+})
+
+export const setFocusDevice = (device) => ({
+  type: SET_FOCUS_DEVICE,
+  device,
+})
+
+export const requestSetDevicePosition = (device) => ({
+  type: REQUEST_SET_DEVICE_POSITION,
+  device,
+})
+
+export const receiveSetDevicePosition = (device) => ({
+  type: RECEIVE_SET_DEVICE_POSITION,
+  device,
+})
+
 
 
 export const previewItem = id => ({

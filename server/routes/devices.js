@@ -107,6 +107,40 @@ router.post('/remove', function (req, res, next) {
     res.json(err);
   });
 });
+
+router.post('/pos', function (req, res, next) {
+  //console.log('devices-pos: ', req.body);
+  let user_id = 1;
+  if (req.isAuthenticated() && req.user) {
+    user_id = req.user.id
+  }
+  const id = req.body.id;
+  const latitude = req.body.latitude;
+  const longitude = req.body.longitude;
+  const device = {
+    id: id,
+    user_id: user_id
+  }
+  //device.id = Math.floor(Math.random() * (1000 - 4 + 1)) + 4;
+
+  dbSession.transaction(function (t) {
+    return Device.update({
+      latitude: latitude, longitude: longitude
+    }, { where: device, transaction: t });
+  }).then(function (result) {
+    console.log('devices-set commeted: ', result);
+    Device.findById(id).then(upDevice => {
+      res.json({ 'id': upDevice.id, 'name': upDevice.name, 'latitude': upDevice.latitude, 'longitude': upDevice.longitude });
+    }).catch(function (err) {
+      console.log('devices-set-find rejected: ', err);
+      res.json(err);
+    });
+  }).catch(function (err) {
+    console.log('devices-set rejected: ', err);
+    res.json(err);
+  });
+});
+
 router.post('/', function (req, res, next) {
   //console.log('devices req.body: ', req.body);
   let user_id = 1;

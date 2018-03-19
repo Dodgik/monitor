@@ -9,15 +9,15 @@ const devicesFxs = require('./fixtures/devices');
 //dbSession.dropTable('devices');
 //Device.drop();
 //dbSession.query("DROP TABLE [monitor].[dbo].[devices]");
-User.sync({ force: true });
+//User.sync({ force: true });
 
-User.sync({ force: true }).then(() => {
+User.sync({ force: false }).then(() => {
     usersFxs.forEach(user => {
         User.create(user);
     });
 });
 
-Device.sync({ force: true }).then(() => {
+Device.sync({ force: false }).then(() => {
   devicesFxs.forEach(device => {
     Device.create(device);
   });

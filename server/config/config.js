@@ -4,7 +4,10 @@ module.exports = {
     "password": "avas",
     "database": "monitor",
     "host": "127.0.0.1",
-    "dialect": "mssql"
+    "dialect": "mssql",
+    "dialectOptions": {
+      "instanceName": "SYMBIOSIS2"
+    }
   },
   "test": {
     "username": "sa",
@@ -18,6 +21,9 @@ module.exports = {
     "password": "avas",
     "database": "monitor",
     "host": "127.0.0.1",
-    "dialect": "mssql"
+    "dialect": "mssql",
+    "dialectOptions": {
+      "instanceName": "SYMBIOSIS2"
+    }
   }
 }
