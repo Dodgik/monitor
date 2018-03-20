@@ -1,6 +1,6 @@
 /* eslint-disable no-constant-condition */
 
-import { take, put, call, fork, select } from 'redux-saga/effects'
+import { take, put, call, fork, select, takeEvery } from 'redux-saga/effects'
 import fetch from 'isomorphic-fetch'
 import * as actions from '../actions/devices_actions'
 import { selectedRedditSelector, devicesListSelector } from '../reducers/selectors'
@@ -24,15 +24,16 @@ export function fetchDevicesApi() {
 
 export function* fetchDevices() {
   yield put(actions.requestDevices())
-  const list = yield call(fetchDevicesApi)
-  yield put(actions.receiveDevices(list))
+  try {
+    const list = yield call(fetchDevicesApi)
+    yield put(actions.receiveDevices(list))
+  } catch (e) {
+    yield put(actions.receiveFailDevices(e))
+  }
 }
 
-export function* subscribeFetchDevice() {
-  while (true) {
-    yield take(actions.REQUEST_DEVICES)
-    yield call(fetchDevices)
-  }
+export function* watchFetchDevice() {
+  yield takeEvery(actions.FETCH_DEVICES, fetchDevices);
 }
 
 
@@ -144,16 +145,18 @@ export function* nextRedditChange() {
 }
 
 export function* startup() {
-  const selectedReddit = yield select(selectedRedditSelector)
-  yield fork(fetchDevices, selectedReddit)
+  //const selectedReddit = yield select(selectedRedditSelector)
+  //yield fork(fetchDevices, selectedReddit)
+  yield fork(fetchDevices)
 }
 
 export default function* root() {
   yield fork(startup)
-  yield fork(nextRedditChange)
-  yield fork(invalidateReddit)
+  //yield fork(nextRedditChange)
+  //yield fork(invalidateReddit)
 
-  yield fork(subscribeFetchDevice)
+  yield fork(watchFetchDevice)
+
   yield fork(subscribeAddDevice)
   yield fork(subscribeSetDevice)
   yield fork(subscribeRemoveDevice)

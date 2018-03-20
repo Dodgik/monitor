@@ -27,6 +27,8 @@ export default (state = devices, action) => {
         list: action.list,
         lastUpdated: action.receivedAt,
       }
+    case actions.RECEIVE_FAIL_DEVICES:
+      return { ...state, isFetching: false }
 
     case actions.REQUEST_ADD_DEVICE:
       return { ...state, isAdding: true }

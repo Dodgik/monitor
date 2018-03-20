@@ -158,7 +158,10 @@ class Map extends React.PureComponent {
     console.log('---Map.componentWillReceiveProps:', nextProps)
     let newCenter = this.getCenter(nextProps)
     if (newCenter) {
-      //this.setState({ mapProps: { ...this.state.mapProps, center: newCenter } })
+      let { center } = this.state.mapProps;
+      if (!center || center.lat != newCenter.lat || center.lng != newCenter.lng) {
+        this.setState({ mapProps: { ...this.state.mapProps, center: newCenter } })
+      }
     }
     if (nextProps.currentDeviceId != this.props.currentDeviceId) {
       this.updateCurrentPosition();

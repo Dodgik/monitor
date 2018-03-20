@@ -7,8 +7,11 @@ export const DEVICES_ACTIONS = {
   ITEM_REMOVE: 'DEVICES_ITEM_REMOVE',
 };
 */
+export const FETCH_DEVICES = 'FETCH_DEVICES'
 export const REQUEST_DEVICES = 'REQUEST_DEVICES'
 export const RECEIVE_DEVICES = 'RECEIVE_DEVICES'
+export const RECEIVE_FAIL_DEVICES = 'RECEIVE_FAIL_DEVICES'
+
 export const REQUEST_ADD_DEVICE = 'REQUEST_ADD_DEVICE'
 export const RECEIVE_ADD_DEVICE = 'RECEIVE_ADD_DEVICE'
 export const REQUEST_SET_DEVICE = 'REQUEST_SET_DEVICE'
@@ -24,6 +27,10 @@ export const RECEIVE_SET_DEVICE_POSITION = 'RECEIVE_SET_DEVICE_POSITION'
 export const SELECT_REDDIT = 'SELECT_REDDIT'
 export const INVALIDATE_REDDIT = 'INVALIDATE_REDDIT'
 
+export const fetchDevices = () => ({
+  type: FETCH_DEVICES,
+})
+
 export const requestDevices = () => ({
   type: REQUEST_DEVICES,
 })
@@ -32,6 +39,11 @@ export const receiveDevices = (list) => ({
   type: RECEIVE_DEVICES,
   list,
   receivedAt: Date.now(),
+})
+
+export const receiveFailDevices = (error) => ({
+  type: RECEIVE_FAIL_DEVICES,
+  error,
 })
 
 export const requestAddDevice = (device) => ({
