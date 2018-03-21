@@ -50,8 +50,9 @@ router.post('/add', function (req, res, next) {
   }).then(function (result) {
     res.json({ 'id': result.id, 'name': result.name });
   }).catch(function (err) {
-    console.log('devices-add rejected: ', err);
-    res.json(err);
+    console.log('devices-add name: ', err.name);
+    console.log('devices-add rejected: ', err.errors);
+    res.status(500).send({ message: err.errors[0].message });
   });
 });
 
@@ -141,7 +142,7 @@ router.post('/pos', function (req, res, next) {
   });
 });
 
-router.post('/', function (req, res, next) {
+router.get('/', function (req, res, next) {
   //console.log('devices req.body: ', req.body);
   let user_id = 1;
   if (req.isAuthenticated() && req.user) {

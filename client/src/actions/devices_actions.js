@@ -12,8 +12,11 @@ export const REQUEST_DEVICES = 'REQUEST_DEVICES'
 export const RECEIVE_DEVICES = 'RECEIVE_DEVICES'
 export const RECEIVE_FAIL_DEVICES = 'RECEIVE_FAIL_DEVICES'
 
+export const ADD_DEVICE = 'ADD_DEVICE'
 export const REQUEST_ADD_DEVICE = 'REQUEST_ADD_DEVICE'
 export const RECEIVE_ADD_DEVICE = 'RECEIVE_ADD_DEVICE'
+export const RECEIVE_FAIL_ADD_DEVICE = 'RECEIVE_FAIL_ADD_DEVICE'
+
 export const REQUEST_SET_DEVICE = 'REQUEST_SET_DEVICE'
 export const RECEIVE_SET_DEVICE = 'RECEIVE_SET_DEVICE'
 export const REQUEST_REMOVE_DEVICE = 'REQUEST_REMOVE_DEVICE'
@@ -26,6 +29,7 @@ export const RECEIVE_SET_DEVICE_POSITION = 'RECEIVE_SET_DEVICE_POSITION'
 
 export const SELECT_REDDIT = 'SELECT_REDDIT'
 export const INVALIDATE_REDDIT = 'INVALIDATE_REDDIT'
+
 
 export const fetchDevices = () => ({
   type: FETCH_DEVICES,
@@ -46,6 +50,12 @@ export const receiveFailDevices = (error) => ({
   error,
 })
 
+
+export const addDevice = (device) => ({
+  type: ADD_DEVICE,
+  device,
+})
+
 export const requestAddDevice = (device) => ({
   type: REQUEST_ADD_DEVICE,
   device,
@@ -55,6 +65,12 @@ export const receiveAddDevice = (device) => ({
   type: RECEIVE_ADD_DEVICE,
   device,
 })
+
+export const receiveFailAddDevice = (error) => ({
+  type: RECEIVE_FAIL_ADD_DEVICE,
+  error,
+})
+
 
 export const requestSetDevice = (device) => ({
   type: REQUEST_SET_DEVICE,

@@ -7,7 +7,7 @@ import { selectedRedditSelector, devicesListSelector } from '../reducers/selecto
 
 const getProps = {
   method: 'GET',
-  credentials: 'include'
+  /*credentials: 'include',*/
 };
 const postProps = {
   method: 'POST',
@@ -16,7 +16,7 @@ const postProps = {
 };
 
 export function fetchDevicesApi() {
-  const initProps = Object.assign(postProps);
+  const initProps = Object.assign(getProps);
   return fetch(`http://localhost:3000/a/devices`, initProps)
     .then(response => response.json())
     .then(json => json)
@@ -41,21 +41,49 @@ export function addDeviceApi(data) {
   let body = JSON.stringify(data);
   const initProps = Object.assign(postProps, { body: body });
   return fetch(`http://localhost:3000/a/devices/add`, initProps)
-    .then(response => response.json())
-    .then(json => json)
+    .then(response => {
+      if (response.ok) {
+        return response.json();
+      } else {
+        //let error = response.text();
+        //console.warn(error)
+        throw response;
+      }
+    })
+    .then(json => {
+      return json
+    })
+    .catch(err => {
+      console.error(err)
+      throw err.json()
+      /*
+      throw err.json().then(errorMessage => {
+        console.error(errorMessage)
+        throw errorMessage;
+      })
+      */
+    })
 }
 
 export function* addDevice(data) {
   yield put(actions.requestAddDevice())
-  const device = yield call(addDeviceApi, data)
-  yield put(actions.receiveAddDevice(device))
+  try {
+    const device = yield call(addDeviceApi, data)
+    yield put(actions.receiveAddDevice(device))
+  } catch (e) {
+    console.error(e)
+    yield put(actions.receiveFailAddDevice(e))
+    /*
+    e.json().then(errorMessage => {
+      console.error(errorMessage)
+      yield put(actions.receiveFailAddDevice(e))
+    })
+    */
+  }
 }
 
-export function* subscribeAddDevice() {
-  while (true) {
-    const { device } = yield take(actions.REQUEST_ADD_DEVICE)
-    yield call(addDevice, device)
-  }
+export function* watchAddDevice() {
+  yield takeEvery(actions.ADD_DEVICE, addDevice);
 }
 
 
@@ -157,7 +185,7 @@ export default function* root() {
 
   yield fork(watchFetchDevice)
 
-  yield fork(subscribeAddDevice)
+  yield fork(watchAddDevice)
   yield fork(subscribeSetDevice)
   yield fork(subscribeRemoveDevice)
   yield fork(subscribeSetDevicePosition)

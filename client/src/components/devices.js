@@ -17,7 +17,6 @@ class Devices extends Component {
 
   startTimer() {
     console.warn('-->Devices.startTimer: ', name);
-
     clearInterval(this.state.timer);
     this.state.timer = setInterval(() => {
       console.warn('-->Devices.timer run');
@@ -27,6 +26,13 @@ class Devices extends Component {
 
   stopTimer() {
     clearInterval(this.state.timer);
+  }
+
+  componentWillReceiveProps(nextProps) {
+    if (this.state.isCurrent != (nextProps.currentDeviceId == this.props.currentDeviceId)) {
+      console.log('---Devices.componentWillReceiveProps:', nextProps)
+      this.setState({ isCurrent: !this.state.isCurrent });
+    }
   }
   
   handleOpenAddForm(e) {
@@ -38,18 +44,15 @@ class Devices extends Component {
     e.preventDefault();
     var name = this.refs.newDeviceName.value;
     this.setState({ showAddForm: false });
-    console.warn('-->Devices.handleAddNewItem: ', name);
-    this.props.addItem({ name: name });
+    this.props.addDevice({ name: name });
   }
   
   render() {
-    console.warn('-->Devices.render:', this.props);
-    const { list } = this.props.devices;
-
+    console.log('-->Devices.render:', this.props);
     return (
       <div className="devices">
         <ul className="list-group list-group-item-action">
-          {list.map(device => <Device key={device.id} {...this.props} device={device} />)}
+          {this.props.list.map(device => <Device key={device.id} {...device} />)}
 
           { this.state.showAddForm ? (
             <li className="list-group-item d-flex justify-content-between align-items-center list-group-item-dark">
@@ -72,32 +75,18 @@ class Devices extends Component {
 
 
 const mapStateToProps = state => ({
-  devices: state.devices
+  list: state.devices.list,
+  isAdding: state.devices.isAdding,
+  errorAddDevice: state.devices.errorAddDevice,
 });
 
 const mapDispatchToProps = dispatch => ({
   fetchDevices: () => {
     dispatch(devicesActions.fetchDevices());
   },
-  viewItem: (name) => {
-    dispatch(devicesActions.viewItem(name));
-  },
-  addItem: (device) => {
-    dispatch(devicesActions.requestAddDevice(device));
-  },
-  setItem: (device) => {
-    dispatch(devicesActions.requestSetDevice(device));
-  },
-  removeItem: (id) => {
-    dispatch(devicesActions.requestRemoveDevice(id));
-  },
-  setCurrentDevice: (device) => {
-    dispatch(devicesActions.setCurrentDevice(device));
-  },
-  setFocusDevice: (device) => {
-    dispatch(devicesActions.setFocusDevice(device));
+  addDevice: (device) => {
+    dispatch(devicesActions.addDevice(device));
   },
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(Devices);
-//export default Devices;

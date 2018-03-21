@@ -8,6 +8,7 @@ const devices = {
   focusDeviceId: null,
   isFetching: false,
   isAdding: false,
+  errorAddDevice: false,
   isChanging: false,
   isRemoving: false,
   isUpdating: false,
@@ -30,6 +31,9 @@ export default (state = devices, action) => {
     case actions.RECEIVE_FAIL_DEVICES:
       return { ...state, isFetching: false }
 
+
+    case actions.ADD_DEVICE:
+      return { ...state, errorAddDevice: false }
     case actions.REQUEST_ADD_DEVICE:
       return { ...state, isAdding: true }
     case actions.RECEIVE_ADD_DEVICE:
@@ -38,6 +42,9 @@ export default (state = devices, action) => {
         ...state,
         isRemoving: false,
       }
+    case actions.RECEIVE_FAIL_ADD_DEVICE:
+      return { ...state, errorAddDevice: action.error }
+
 
     case actions.REQUEST_SET_DEVICE:
       return { ...state, isChanging: true }
