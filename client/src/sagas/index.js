@@ -1,21 +1,10 @@
 /* eslint-disable no-constant-condition */
 
 import { take, put, call, fork, select, takeEvery } from 'redux-saga/effects'
-import fetch from 'isomorphic-fetch'
 import * as actions from '../actions/devices_actions'
 import { selectedRedditSelector, devicesListSelector } from '../reducers/selectors'
 
 import api from '../api'
-
-const getProps = {
-  method: 'GET',
-  /*credentials: 'include',*/
-};
-const postProps = {
-  method: 'POST',
-  headers: { 'Content-Type': 'application/json' },
-  /*credentials: 'include',*/
-};
 
 
 export function* fetchDevices() {
@@ -58,7 +47,7 @@ export function* watchAddDevice() {
 
 
 export function* setDevice(data) {
-  yield put(actions.requestSetDevice())
+  yield put(actions.requestSetDevice(data))
   try {
     const { response, error } = yield call(api.devices.set, data)
     if (response) {
@@ -77,7 +66,7 @@ export function* watchSetDevice() {
 
 
 export function* removeDevice(id) {
-  yield put(actions.requestRemoveDevice())
+  yield put(actions.requestRemoveDevice(id))
   try {
     const { response, error } = yield call(api.devices.remove, data)
     if (response) {
@@ -94,14 +83,6 @@ export function* watchRemoveDevice() {
   yield takeEvery(actions.REMOVE_DEVICE, removeDevice);
 }
 
-
-export function setDevicePositionApi(data) {
-  let body = JSON.stringify(data);
-  const initProps = Object.assign(postProps, { body: body });
-  return fetch(`http://localhost:3000/a/devices/pos`, initProps)
-    .then(response => response.json())
-    .then(json => json)
-}
 
 export function* setDevicePosition(data) {
   yield put(actions.requestSetDevicePosition())

@@ -67,12 +67,12 @@ router.post('/add', function (req, res, next) {
   }).catch(function (err) {
     console.log('devices-add name: ', err.name);
     console.log('devices-add rejected: ', err.errors);
-    res.status(400).send({ message: err.errors[0].message });
+    res.status(400).json({ message: err.errors[0].message });
   });
 });
 
 router.post('/set', function (req, res, next) {
-  //console.log('devices-set: ', req.body);
+  console.log('devices-set: ', req.body);
   let user_id = 1;
   if (req.isAuthenticated() && req.user) {
     user_id = req.user.id
@@ -96,8 +96,9 @@ router.post('/set', function (req, res, next) {
       res.json(err);
     });
   }).catch(function (err) {
-    console.log('devices-set rejected: ', err);
-    res.json(err);
+    let error = { id, message: err.errors[0].message }
+    console.log('devices-set rejected: ', error);
+    res.status(400).json(error);
   });
 });
 
@@ -119,8 +120,8 @@ router.post('/remove', function (req, res, next) {
   }).then(function (result) {
     res.json({ 'id': id });
   }).catch(function (err) {
-    console.log('devices-add rejected: ', err);
-    res.json(err);
+    console.log('devices-remove rejected: ', err.errors);
+    res.status(400).json({ id,  message: err.errors[0].message });
   });
 });
 
@@ -152,8 +153,8 @@ router.post('/pos', function (req, res, next) {
       res.json(err);
     });
   }).catch(function (err) {
-    console.log('devices-set rejected: ', err);
-    res.json(err);
+    console.log('devices-pos rejected: ', err.errors);
+    res.status(400).json({ id, message: err.errors[0].message });
   });
 });
 

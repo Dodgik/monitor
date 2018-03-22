@@ -6,11 +6,16 @@ import cookie from 'react-cookies'
 const devices = {
   currentDeviceId: null,
   focusDeviceId: null,
+
+  selectedDevice: null,
+
   isFetching: false,
   isAdding: false,
   errorAdd: false,
-  isChanging: false,
-  errorSet: false,
+
+  editing: false,
+  editError: false,
+
   isRemoving: false,
   errorRemove: false,
   isUpdating: false,
@@ -19,6 +24,23 @@ const devices = {
 
 export default (state = devices, action) => {
   switch (action.type) {
+
+    case actions.SET_CURRENT_DEVICE:
+      state.currentDeviceId = action.device.id;
+      cookie.save('current_device', action.device.id, { path: '/' })
+      return { ...state }
+
+    case actions.SET_FOCUS_DEVICE:
+      state.focusDeviceId = action.device.id;
+      cookie.save('focus_device', action.device.id, { path: '/' })
+      return { ...state }
+
+    case actions.SELECT_DEVICE:
+      return { ...state, selectedDevice: action.device }
+    case actions.UNSELECT_DEVICE:
+      return { ...state, selectedDevice: null }
+
+
     case actions.REQUEST_DEVICES:
       return { ...state, isFetching: true }
     case actions.RECEIVE_DEVICES:
@@ -46,16 +68,22 @@ export default (state = devices, action) => {
 
 
     case actions.SET_DEVICE:
-      return { ...state, errorSet: false }
+      return { ...state, editing: action.device.id, editError: false }
+    /*
     case actions.REQUEST_SET_DEVICE:
-      return { ...state, isChanging: true }
+      return { ...state, editing: true }
+    */
     case actions.RECEIVE_SET_DEVICE:
       state.list = state.list.map(function (device) {
         return device.id == action.device.id ? action.device : device;
       });
-      return { ...state, isChanging: false }
+      return { ...state, editing: false }
     case actions.RECEIVE_FAIL_SET_DEVICE:
-      return { ...state, errorSet: action.error }
+      let error = {
+        id: state.editing,
+        message: action.error.message
+      }
+      return { ...state, editError: error, editing: false }
 
 
     case actions.REMOVE_DEVICE:
@@ -84,15 +112,6 @@ export default (state = devices, action) => {
       return { ...state, errorSetPosition: action.error }
 
 
-    case actions.SET_CURRENT_DEVICE:
-      state.currentDeviceId = action.device.id;
-      cookie.save('current_device', action.device.id, { path: '/' })
-      return { ...state }
-
-    case actions.SET_FOCUS_DEVICE:
-      state.focusDeviceId = action.device.id;
-      cookie.save('focus_device', action.device.id, { path: '/' })
-      return { ...state }
 
 
 
