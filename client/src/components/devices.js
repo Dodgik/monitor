@@ -43,7 +43,7 @@ class Devices extends Component {
   handleAddNewItem(e) {
     e.preventDefault();
     var name = this.refs.newDeviceName.value;
-    this.setState({ showAddForm: false });
+    //this.setState({ showAddForm: false });
     this.props.addDevice({ name: name });
   }
   
@@ -62,6 +62,11 @@ class Devices extends Component {
                 </div>
                 <button type="submit" className="btn btn-primary" onClick={this.handleAddNewItem.bind(this)}>Add</button>
                 <button type="button" className="btn btn-secondary float-right" onClick={this.handleOpenAddForm.bind(this)}>Close</button>
+                {this.props.errorAddDevice && this.props.errorAddDevice.message && (
+                  <div className="mt-2 text-danger text-center">
+                    {this.props.errorAddDevice.message}
+                  </div>
+                )}
               </div>
             </li>
           ) : (

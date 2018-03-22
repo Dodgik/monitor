@@ -40,45 +40,38 @@ export function* watchFetchDevice() {
 export function addDeviceApi(data) {
   let body = JSON.stringify(data);
   const initProps = Object.assign(postProps, { body: body });
+  let response;
   return fetch(`http://localhost:3000/a/devices/add`, initProps)
-    .then(response => {
-      if (response.ok) {
-        return response.json();
-      } else {
-        //let error = response.text();
-        //console.warn(error)
-        throw response;
-      }
+    .then(res => {
+      response = res
+      return response.json();
     })
     .then(json => {
-      return json
+      if (response.ok) {
+        return { response: json }
+      } else {
+        return { error: json }
+      }
     })
-    .catch(err => {
-      console.error(err)
-      throw err.json()
-      /*
-      throw err.json().then(errorMessage => {
-        console.error(errorMessage)
-        throw errorMessage;
-      })
-      */
+    .catch(error => {
+      return { error: error }
     })
 }
 
 export function* addDevice(data) {
   yield put(actions.requestAddDevice())
   try {
-    const device = yield call(addDeviceApi, data)
-    yield put(actions.receiveAddDevice(device))
+    const { response, error } = yield call(addDeviceApi, data)
+    if (response) {
+      console.log('response:', response)
+      yield put(actions.receiveAddDevice(response))
+    } else {
+      console.log('error:', error)
+      yield put(actions.receiveFailAddDevice(error))
+    }
+    
   } catch (e) {
-    console.error(e)
     yield put(actions.receiveFailAddDevice(e))
-    /*
-    e.json().then(errorMessage => {
-      console.error(errorMessage)
-      yield put(actions.receiveFailAddDevice(e))
-    })
-    */
   }
 }
 

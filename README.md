@@ -10,6 +10,8 @@ Now you can access your react application on http://localhost:8080
 This will create create two files: `index.js` in `server/public/js` and `server.js` in `server/bin`.
 `server.js` will be used for serving the application on port 3000 and `index.js` is the actual react app itself.
 
+	npm run start
+
 To get a distributable tarball of your application, run this command:
 
     npm pack
