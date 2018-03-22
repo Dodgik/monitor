@@ -58,7 +58,7 @@ router.get('/', (req, res) => {
     },
   });
 
-  const context = { user: 'vas2' };
+  const context = { user: user };
 
   const html = ReactDOMServer.renderToString(
     <Provider store={store}>
@@ -66,7 +66,7 @@ router.get('/', (req, res) => {
         location={req.originalUrl}
         context={context}
       >
-        <App />
+        <App user={user} />
       </StaticRouter>
     </Provider>,
   );

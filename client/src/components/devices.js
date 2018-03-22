@@ -10,7 +10,8 @@ class Devices extends Component {
 
     this.state = {
       showAddForm: false,
-      timer: null
+      errorAdd: null,
+      timer: null,
     }
     this.startTimer();
   }
@@ -29,15 +30,15 @@ class Devices extends Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    if (this.state.isCurrent != (nextProps.currentDeviceId == this.props.currentDeviceId)) {
+    if (nextProps.errorAdd && this.state.showAddForm) {
       console.log('---Devices.componentWillReceiveProps:', nextProps)
-      this.setState({ isCurrent: !this.state.isCurrent });
+      this.setState({ errorAdd: nextProps.errorAdd });
     }
   }
   
   handleOpenAddForm(e) {
     e.preventDefault();
-    this.setState({ showAddForm: !this.state.showAddForm });
+    this.setState({ showAddForm: !this.state.showAddForm, errorAdd: null });
   }
 
   handleAddNewItem(e) {
@@ -62,9 +63,9 @@ class Devices extends Component {
                 </div>
                 <button type="submit" className="btn btn-primary" onClick={this.handleAddNewItem.bind(this)}>Add</button>
                 <button type="button" className="btn btn-secondary float-right" onClick={this.handleOpenAddForm.bind(this)}>Close</button>
-                {this.props.errorAddDevice && this.props.errorAddDevice.message && (
+                {this.state.errorAdd && this.state.errorAdd.message && (
                   <div className="mt-2 text-danger text-center">
-                    {this.props.errorAddDevice.message}
+                    {this.state.errorAdd.message}
                   </div>
                 )}
               </div>
@@ -82,7 +83,7 @@ class Devices extends Component {
 const mapStateToProps = state => ({
   list: state.devices.list,
   isAdding: state.devices.isAdding,
-  errorAddDevice: state.devices.errorAddDevice,
+  errorAdd: state.devices.errorAdd,
 });
 
 const mapDispatchToProps = dispatch => ({

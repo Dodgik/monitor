@@ -5,6 +5,8 @@ import fetch from 'isomorphic-fetch'
 import * as actions from '../actions/devices_actions'
 import { selectedRedditSelector, devicesListSelector } from '../reducers/selectors'
 
+import api from '../api'
+
 const getProps = {
   method: 'GET',
   /*credentials: 'include',*/
@@ -15,18 +17,16 @@ const postProps = {
   /*credentials: 'include',*/
 };
 
-export function fetchDevicesApi() {
-  const initProps = Object.assign(getProps);
-  return fetch(`http://localhost:3000/a/devices`, initProps)
-    .then(response => response.json())
-    .then(json => json)
-}
 
 export function* fetchDevices() {
   yield put(actions.requestDevices())
   try {
-    const list = yield call(fetchDevicesApi)
-    yield put(actions.receiveDevices(list))
+    const { response, error } = yield call(api.devices.all)
+    if (response) {
+      yield put(actions.receiveDevices(response))
+    } else {
+      yield put(actions.receiveFailDevices(error))
+    }
   } catch (e) {
     yield put(actions.receiveFailDevices(e))
   }
@@ -37,39 +37,16 @@ export function* watchFetchDevice() {
 }
 
 
-export function addDeviceApi(data) {
-  let body = JSON.stringify(data);
-  const initProps = Object.assign(postProps, { body: body });
-  let response;
-  return fetch(`http://localhost:3000/a/devices/add`, initProps)
-    .then(res => {
-      response = res
-      return response.json();
-    })
-    .then(json => {
-      if (response.ok) {
-        return { response: json }
-      } else {
-        return { error: json }
-      }
-    })
-    .catch(error => {
-      return { error: error }
-    })
-}
 
 export function* addDevice(data) {
   yield put(actions.requestAddDevice())
   try {
-    const { response, error } = yield call(addDeviceApi, data)
+    const { response, error } = yield call(api.devices.add, data)
     if (response) {
-      console.log('response:', response)
       yield put(actions.receiveAddDevice(response))
     } else {
-      console.log('error:', error)
       yield put(actions.receiveFailAddDevice(error))
     }
-    
   } catch (e) {
     yield put(actions.receiveFailAddDevice(e))
   }
@@ -80,48 +57,41 @@ export function* watchAddDevice() {
 }
 
 
-export function setDeviceApi(data) {
-  let body = JSON.stringify(data);
-  const initProps = Object.assign(postProps, { body: body });
-  return fetch(`http://localhost:3000/a/devices/set`, initProps)
-    .then(response => response.json())
-    .then(json => json)
-}
-
 export function* setDevice(data) {
   yield put(actions.requestSetDevice())
-  const device = yield call(setDeviceApi, data)
-  yield put(actions.receiveSetDevice(device))
-}
-
-export function* subscribeSetDevice() {
-  while (true) {
-    const { device } = yield take(actions.REQUEST_SET_DEVICE)
-    yield call(setDevice, device)
+  try {
+    const { response, error } = yield call(api.devices.set, data)
+    if (response) {
+      yield put(actions.receiveSetDevice(response))
+    } else {
+      yield put(actions.receiveFailSetDevice(error))
+    }
+  } catch (e) {
+    yield put(actions.receiveFailSetDevice(e))
   }
 }
 
-
-
-export function removeDeviceApi(id) {
-  let body = JSON.stringify({ id });
-  const initProps = Object.assign(postProps, { body: body });
-  return fetch(`http://localhost:3000/a/devices/remove`, initProps)
-    .then(response => response.json())
-    .then(json => json)
+export function* watchSetDevice() {
+  yield takeEvery(actions.SET_DEVICE, setDevice);
 }
+
 
 export function* removeDevice(id) {
   yield put(actions.requestRemoveDevice())
-  const device = yield call(removeDeviceApi, id)
-  yield put(actions.receiveRemoveDevice(device))
+  try {
+    const { response, error } = yield call(api.devices.remove, data)
+    if (response) {
+      yield put(actions.receiveRemoveDevice(response))
+    } else {
+      yield put(actions.receiveFailRemoveDevice(error))
+    }
+  } catch (e) {
+    yield put(actions.receiveFailRemoveDevice(e))
+  }
 }
 
-export function* subscribeRemoveDevice() {
-  while (true) {
-    const { id } = yield take(actions.REQUEST_REMOVE_DEVICE)
-    yield call(removeDevice, id)
-  }
+export function* watchRemoveDevice() {
+  yield takeEvery(actions.REMOVE_DEVICE, removeDevice);
 }
 
 
@@ -135,16 +105,23 @@ export function setDevicePositionApi(data) {
 
 export function* setDevicePosition(data) {
   yield put(actions.requestSetDevicePosition())
-  const device = yield call(setDevicePositionApi, data)
-  yield put(actions.receiveSetDevicePosition(device))
-}
-
-export function* subscribeSetDevicePosition() {
-  while (true) {
-    const { device } = yield take(actions.REQUEST_SET_DEVICE_POSITION)
-    yield call(setDevicePosition, device)
+  try {
+    const { response, error } = yield call(api.devices.pos, data)
+    if (response) {
+      yield put(actions.receiveSetDevicePosition(response))
+    } else {
+      yield put(actions.receiveFailSetDevicePosition(error))
+    }
+  } catch (e) {
+    yield put(actions.receiveFailSetDevicePosition(e))
   }
 }
+
+export function* watchSetDevicePosition() {
+  yield takeEvery(actions.SET_DEVICE_POSITION, setDevicePosition);
+}
+
+
 
 
 export function* invalidateReddit() {
@@ -179,7 +156,7 @@ export default function* root() {
   yield fork(watchFetchDevice)
 
   yield fork(watchAddDevice)
-  yield fork(subscribeSetDevice)
-  yield fork(subscribeRemoveDevice)
-  yield fork(subscribeSetDevicePosition)
+  yield fork(watchSetDevice)
+  yield fork(watchRemoveDevice)
+  yield fork(watchSetDevicePosition)
 }

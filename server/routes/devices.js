@@ -32,6 +32,21 @@ router.use(function (req, res, next) {
   next();
 });
 
+router.get('/', function (req, res, next) {
+  console.log('devices req.body: ', req.body);
+  let user_id = 1;
+  if (req.isAuthenticated() && req.user) {
+    user_id = req.user.id
+  }
+
+  Device.findAll({
+    attributes: ['id', 'name', 'latitude', 'longitude'],
+    where: { user_id: user_id }
+  }).then(devices => {
+    res.json(devices);
+  })
+});
+
 router.post('/add', function (req, res, next) {
   //console.log('devices-add: ', req.body);
   let user_id = 1;
@@ -52,7 +67,7 @@ router.post('/add', function (req, res, next) {
   }).catch(function (err) {
     console.log('devices-add name: ', err.name);
     console.log('devices-add rejected: ', err.errors);
-    res.status(500).send({ message: err.errors[0].message });
+    res.status(400).send({ message: err.errors[0].message });
   });
 });
 
@@ -140,21 +155,6 @@ router.post('/pos', function (req, res, next) {
     console.log('devices-set rejected: ', err);
     res.json(err);
   });
-});
-
-router.get('/', function (req, res, next) {
-  //console.log('devices req.body: ', req.body);
-  let user_id = 1;
-  if (req.isAuthenticated() && req.user) {
-    user_id = req.user.id
-  }
-
-  Device.findAll({
-    attributes: ['id', 'name', 'latitude', 'longitude'],
-    where: { user_id: user_id }
-  }).then(devices => {
-    res.json(devices);
-  })
 });
 
 export default router;

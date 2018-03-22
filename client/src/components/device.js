@@ -18,6 +18,7 @@ class Device extends Component {
   }
 
   componentWillReceiveProps(nextProps) {
+    let state = null;
     if (this.state.isCurrent != (nextProps.currentDeviceId == this.props.currentDeviceId)) {
       console.log('---Device.componentWillReceiveProps:', nextProps)
       this.setState({ isCurrent: !this.state.isCurrent });

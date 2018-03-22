@@ -17,100 +17,76 @@ export const REQUEST_ADD_DEVICE = 'REQUEST_ADD_DEVICE'
 export const RECEIVE_ADD_DEVICE = 'RECEIVE_ADD_DEVICE'
 export const RECEIVE_FAIL_ADD_DEVICE = 'RECEIVE_FAIL_ADD_DEVICE'
 
+export const SET_DEVICE = 'SET_DEVICE'
 export const REQUEST_SET_DEVICE = 'REQUEST_SET_DEVICE'
 export const RECEIVE_SET_DEVICE = 'RECEIVE_SET_DEVICE'
+export const RECEIVE_FAIL_SET_DEVICE = 'RECEIVE_FAIL_SET_DEVICE'
+
+export const REMOVE_DEVICE = 'REMOVE_DEVICE'
 export const REQUEST_REMOVE_DEVICE = 'REQUEST_REMOVE_DEVICE'
 export const RECEIVE_REMOVE_DEVICE = 'RECEIVE_REMOVE_DEVICE'
-export const SET_CURRENT_DEVICE = 'SET_CURRENT_DEVICE'
-export const SET_FOCUS_DEVICE = 'SET_FOCUS_DEVICE'
+export const RECEIVE_FAIL_REMOVE_DEVICE = 'RECEIVE_FAIL_REMOVE_DEVICE'
 
+export const SET_DEVICE_POSITION = 'SET_DEVICE_POSITION'
 export const REQUEST_SET_DEVICE_POSITION = 'REQUEST_SET_DEVICE_POSITION'
 export const RECEIVE_SET_DEVICE_POSITION = 'RECEIVE_SET_DEVICE_POSITION'
+export const RECEIVE_FAIL_SET_DEVICE_POSITION = 'RECEIVE_FAIL_SET_DEVICE_POSITION'
+
+export const SET_CURRENT_DEVICE = 'SET_CURRENT_DEVICE'
+export const SET_FOCUS_DEVICE = 'SET_FOCUS_DEVICE'
 
 export const SELECT_REDDIT = 'SELECT_REDDIT'
 export const INVALIDATE_REDDIT = 'INVALIDATE_REDDIT'
 
 
-export const fetchDevices = () => ({
-  type: FETCH_DEVICES,
-})
+export const fetchDevices = () => ({ type: FETCH_DEVICES })
 
-export const requestDevices = () => ({
-  type: REQUEST_DEVICES,
-})
+export const requestDevices = () => ({ type: REQUEST_DEVICES })
 
-export const receiveDevices = (list) => ({
-  type: RECEIVE_DEVICES,
-  list,
-  receivedAt: Date.now(),
-})
+export const receiveDevices = (list) => ({ type: RECEIVE_DEVICES, list, receivedAt: Date.now(), })
 
-export const receiveFailDevices = (error) => ({
-  type: RECEIVE_FAIL_DEVICES,
-  error,
-})
+export const receiveFailDevices = (error) => ({ type: RECEIVE_FAIL_DEVICES, error, })
 
 
-export const addDevice = (device) => ({
-  type: ADD_DEVICE,
-  device,
-})
+export const addDevice = (device) => ({ type: ADD_DEVICE, device, })
 
-export const requestAddDevice = (device) => ({
-  type: REQUEST_ADD_DEVICE,
-  device,
-})
+export const requestAddDevice = (device) => ({ type: REQUEST_ADD_DEVICE, device, })
 
-export const receiveAddDevice = (device) => ({
-  type: RECEIVE_ADD_DEVICE,
-  device,
-})
+export const receiveAddDevice = (device) => ({ type: RECEIVE_ADD_DEVICE, device, })
 
-export const receiveFailAddDevice = (error) => ({
-  type: RECEIVE_FAIL_ADD_DEVICE,
-  error,
-})
+export const receiveFailAddDevice = (error) => ({ type: RECEIVE_FAIL_ADD_DEVICE, error, })
 
 
-export const requestSetDevice = (device) => ({
-  type: REQUEST_SET_DEVICE,
-  device,
-})
+export const setDevice = (device) => ({ type: SET_DEVICE, device, })
 
-export const receiveSetDevice = (device) => ({
-  type: RECEIVE_SET_DEVICE,
-  device,
-})
+export const requestSetDevice = (device) => ({ type: REQUEST_SET_DEVICE, device, })
 
-export const requestRemoveDevice = (id) => ({
-  type: REQUEST_REMOVE_DEVICE,
-  id,
-})
+export const receiveSetDevice = (device) => ({ type: RECEIVE_SET_DEVICE, device, })
 
-export const receiveRemoveDevice = (device) => ({
-  type: RECEIVE_REMOVE_DEVICE,
-  device,
-})
+export const receiveFailSetDevice = (error) => ({ type: RECEIVE_FAIL_SET_DEVICE, error, })
 
-export const setCurrentDevice = (device) => ({
-  type: SET_CURRENT_DEVICE,
-  device,
-})
 
-export const setFocusDevice = (device) => ({
-  type: SET_FOCUS_DEVICE,
-  device,
-})
+export const removeDevice = (id) => ({ type: REMOVE_DEVICE, id, })
 
-export const requestSetDevicePosition = (device) => ({
-  type: REQUEST_SET_DEVICE_POSITION,
-  device,
-})
+export const requestRemoveDevice = (id) => ({ type: REQUEST_REMOVE_DEVICE, id, })
 
-export const receiveSetDevicePosition = (device) => ({
-  type: RECEIVE_SET_DEVICE_POSITION,
-  device,
-})
+export const receiveRemoveDevice = (device) => ({ type: RECEIVE_REMOVE_DEVICE, device, })
+
+export const receiveFailRemoveDevice = (error) => ({ type: RECEIVE_FAIL_REMOVE_DEVICE, error, })
+
+
+export const setDevicePosition = (device) => ({ type: SET_DEVICE_POSITION, device, })
+
+export const requestSetDevicePosition = (device) => ({ type: REQUEST_SET_DEVICE_POSITION, device, })
+
+export const receiveSetDevicePosition = (device) => ({ type: RECEIVE_SET_DEVICE_POSITION, device, })
+
+export const receiveFailSetDevicePosition = (error) => ({ type: RECEIVE_FAIL_SET_DEVICE_POSITION, error, })
+
+
+export const setCurrentDevice = (device) => ({ type: SET_CURRENT_DEVICE, device, })
+
+export const setFocusDevice = (device) => ({ type: SET_FOCUS_DEVICE, device, })
 
 
 

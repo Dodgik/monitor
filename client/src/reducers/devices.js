@@ -8,9 +8,11 @@ const devices = {
   focusDeviceId: null,
   isFetching: false,
   isAdding: false,
-  errorAddDevice: false,
+  errorAdd: false,
   isChanging: false,
+  errorSet: false,
   isRemoving: false,
+  errorRemove: false,
   isUpdating: false,
   list: []
 };
@@ -33,40 +35,54 @@ export default (state = devices, action) => {
 
 
     case actions.ADD_DEVICE:
-      return { ...state, errorAddDevice: false }
+      return { ...state, errorAdd: false }
     case actions.REQUEST_ADD_DEVICE:
       return { ...state, isAdding: true }
     case actions.RECEIVE_ADD_DEVICE:
       state.list.push(action.device);
-      return {
-        ...state,
-        isRemoving: false,
-      }
+      return { ...state, isAdding: false }
     case actions.RECEIVE_FAIL_ADD_DEVICE:
-      return { ...state, errorAddDevice: action.error }
+      return { ...state, errorAdd: action.error }
 
 
+    case actions.SET_DEVICE:
+      return { ...state, errorSet: false }
     case actions.REQUEST_SET_DEVICE:
       return { ...state, isChanging: true }
     case actions.RECEIVE_SET_DEVICE:
       state.list = state.list.map(function (device) {
         return device.id == action.device.id ? action.device : device;
       });
-      return {
-        ...state,
-        isChanging: false,
-      }
-      
+      return { ...state, isChanging: false }
+    case actions.RECEIVE_FAIL_SET_DEVICE:
+      return { ...state, errorSet: action.error }
+
+
+    case actions.REMOVE_DEVICE:
+      return { ...state, errorRemove: false }
     case actions.REQUEST_REMOVE_DEVICE:
       return { ...state, isRemoving: true }
     case actions.RECEIVE_REMOVE_DEVICE:
       state.list = state.list.filter(function (device) {
         return device.id != action.device.id;
       });
-      return {
-        ...state,
-        isRemoving: false,
-      }
+      return { ...state, isRemoving: false, }
+    case actions.RECEIVE_FAIL_REMOVE_DEVICE:
+      return { ...state, errorRemove: action.error }
+
+
+    case actions.SET_DEVICE_POSITION:
+      return { ...state, errorSetPosition: false }
+    case actions.REQUEST_SET_DEVICE_POSITION:
+      return { ...state, isUpdating: true }
+    case actions.RECEIVE_SET_DEVICE_POSITION:
+      state.list = state.list.map(function (device) {
+        return device.id == action.device.id ? action.device : device;
+      });
+      return { ...state, isUpdating: false }
+    case actions.RECEIVE_FAIL_SET_DEVICE_POSITION:
+      return { ...state, errorSetPosition: action.error }
+
 
     case actions.SET_CURRENT_DEVICE:
       state.currentDeviceId = action.device.id;
@@ -79,17 +95,6 @@ export default (state = devices, action) => {
       return { ...state }
 
 
-    case actions.REQUEST_SET_DEVICE_POSITION:
-      return { ...state, isUpdating: true }
-    case actions.RECEIVE_SET_DEVICE_POSITION:
-      state.list = state.list.map(function (device) {
-        return device.id == action.device.id ? action.device : device;
-      });
-      return {
-        ...state,
-        isUpdating: false,
-      }
-
 
 
     case DEVICES_ACTIONS.ITEM_ADD:
@@ -101,6 +106,8 @@ export default (state = devices, action) => {
         return item.id != action.id;
       });
       return { ...state };
+
+
     default:
       return state;
   }
