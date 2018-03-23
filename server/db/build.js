@@ -9,7 +9,10 @@ const devicesFxs = require('./fixtures/devices');
 //dbSession.dropTable('devices');
 //Device.drop();
 //dbSession.query("DROP TABLE [monitor].[dbo].[devices]");
-//User.sync({ force: true });
+
+
+Device.sync({ force: true });
+User.sync({ force: true });
 
 User.sync({ force: false }).then(() => {
     usersFxs.forEach(user => {

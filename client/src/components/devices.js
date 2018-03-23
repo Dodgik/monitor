@@ -10,7 +10,6 @@ class Devices extends Component {
 
     this.state = {
       showAddForm: false,
-      errorAdd: null,
       timer: null,
     }
     this.startTimer();
@@ -30,21 +29,24 @@ class Devices extends Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    if (nextProps.errorAdd && this.state.showAddForm) {
       console.log('---Devices.componentWillReceiveProps:', nextProps)
-      this.setState({ errorAdd: nextProps.errorAdd });
+    if (nextProps.actionDevice && !nextProps.actionDevice.id) {
+      let state = { ...nextProps.actionDevice };
+
+      if (this.state.sending && !state.sending && !state.error && this.state.showAddForm) {
+        state.showAddForm = false;
+      }
+      console.log('---Devices.componentWillReceiveProps setState:', state)
+      this.setState(state);
     }
   }
   
-  handleOpenAddForm(e) {
-    e.preventDefault();
-    this.setState({ showAddForm: !this.state.showAddForm, errorAdd: null });
+  toggleAddForm() {
+    this.setState({ showAddForm: !this.state.showAddForm });
   }
 
-  handleAddNewItem(e) {
-    e.preventDefault();
+  handleAddDevice() {
     var name = this.refs.newDeviceName.value;
-    //this.setState({ showAddForm: false });
     this.props.addDevice({ name: name });
   }
   
@@ -61,17 +63,17 @@ class Devices extends Component {
                 <div className="mb-2">
                   <input className="name form-control" name="name" type="text" placeholder="Device Name" ref="newDeviceName" />
                 </div>
-                <button type="submit" className="btn btn-primary" onClick={this.handleAddNewItem.bind(this)}>Add</button>
-                <button type="button" className="btn btn-secondary float-right" onClick={this.handleOpenAddForm.bind(this)}>Close</button>
-                {this.state.errorAdd && this.state.errorAdd.message && (
-                  <div className="mt-2 text-danger text-center">
-                    {this.state.errorAdd.message}
+                {this.state.sending ? (<div className="mt-2 text-warning text-center">Adding...</div>) : (
+                  <div>
+                    <button type="submit" className="btn btn-primary" onClick={this.handleAddDevice.bind(this)}>Add</button>
+                    <button type="button" className="btn btn-secondary float-right" onClick={this.toggleAddForm.bind(this)}>Close</button>
                   </div>
                 )}
+                {this.state.error && (<div className="mt-2 text-danger text-center">{this.state.error}</div>)}
               </div>
             </li>
           ) : (
-            <li onClick={this.handleOpenAddForm.bind(this)} className="list-group-item list-group-item-action d-flex justify-content-between align-items-center list-group-item-dark show" style={{ cursor: 'pointer' }}>Add new device</li>
+            <li onClick={this.toggleAddForm.bind(this)} className="list-group-item list-group-item-action list-group-item-dark text-center" style={{ cursor: 'pointer' }}>Add new device</li>
           )}
         </ul>
       </div>
@@ -82,8 +84,7 @@ class Devices extends Component {
 
 const mapStateToProps = state => ({
   list: state.devices.list,
-  isAdding: state.devices.isAdding,
-  errorAdd: state.devices.errorAdd,
+  actionDevice: state.devices.actionDevice,
 });
 
 const mapDispatchToProps = dispatch => ({

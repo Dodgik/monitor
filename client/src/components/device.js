@@ -12,8 +12,6 @@ class Device extends Component {
       isCurrent: props.currentDeviceId == props.id,
       showMenu: false,
       showEditForm: false,
-      editing: false,
-      editError: false,
       showSetCurrentForm: false,
       showRemoveForm: false,
     }
@@ -24,13 +22,18 @@ class Device extends Component {
     if (this.state.isCurrent != (nextProps.currentDeviceId == this.props.currentDeviceId)) {
       state = { ...state, isCurrent: !this.state.isCurrent };
     }
-    if (this.state.selectedDevice && !this.props.selectedDevice) {
-      state = { ...state, showMenu: false, showEditForm: false, showSetCurrentForm: false, showRemoveForm: false };
-    } else if (!this.state.selectedDevice && this.props.selectedDevice && this.props.selectedDevice.id == this.props.id) {
-      state = { ...state, showMenu: true, selectedDevice: this.props.selectedDevice };
+
+    if (nextProps.actionDevice && this.props.id == nextProps.actionDevice.id) {
+      state = { ...state, ...nextProps.actionDevice };
+
+      if (this.state.sending && !state.sending && !state.error && this.state.showEditForm) {
+          state.showEditForm = false;
+      }
     }
+
     if (state) {
       console.log('---Device.componentWillReceiveProps:', nextProps)
+      console.log('---Device.componentWillReceiveProps setState:', state)
       this.setState(state);
     }
   }
@@ -45,12 +48,18 @@ class Device extends Component {
   }
 
   handleRemove() {
-    this.props.removeDevice(this.props.id);
+    this.props.removeDevice({ id: this.props.id });
   }
 
   toggleMenu(e) {
     e.preventDefault();
-    this.setState({ showMenu: !this.state.showMenu, showEditForm: false, showSetCurrentForm: false, showRemoveForm: false });
+    this.setState({
+      showMenu: !this.state.showMenu,
+      showEditForm: false,
+      showSetCurrentForm: false,
+      showRemoveForm: false,
+      error: false,
+    });
   }
 
   toggleEditForm(e) {
@@ -66,7 +75,6 @@ class Device extends Component {
   handleEditDevice(e) {
     e.preventDefault();
     var name = this.refs.deviceName.value;
-    this.setState({ showEditForm: false });
     this.props.setDevice({ name: name, id: this.props.id });
   }
 
@@ -77,7 +85,6 @@ class Device extends Component {
   handleSetCurrent(e) {
     e.preventDefault();
     this.props.setCurrentDevice({ id: this.props.id });
-    this.setState({ showSetCurrentForm: false });
   }
 
   render() {
@@ -113,18 +120,16 @@ class Device extends Component {
 
         {this.state.showEditForm && (
           <div className="rounded p-3 mt-3 w-100 bg-white clearfix">
-            {this.state.editing ? (
-              <div className="mb-2 text-center">Editing</div>
-            ) : (
               <div className="mb-2">
                 <input className="form-control" type="text" placeholder="Device Name" ref="deviceName" value={this.state.inputName || name} onChange={this.onNameChange.bind(this)} />
               </div>
-              <button type="submit" className="btn btn-primary" onClick={this.handleEditDevice.bind(this)}>Save</button>
-              <button type="button" className="btn btn-secondary float-right" onClick={this.toggleEditForm.bind(this)}>Close</button>
-              {this.state.editError && this.state.editError.message && (
-                <div className="mt-2 text-danger text-center">{this.state.editError.message}</div>
+              {this.state.sending ? (<div className="mt-2 text-warning text-center">Sending...</div>) : (
+                <div>
+                  <button type="submit" className="btn btn-primary" onClick={this.handleEditDevice.bind(this)}>Save</button>
+                  <button type="button" className="btn btn-secondary float-right" onClick={this.toggleEditForm.bind(this)}>Close</button>
+                </div>
               )}
-            )}
+              {this.state.error && (<div className="mt-2 text-danger text-center">{this.state.error}</div>)}
           </div>
         )}
 
@@ -141,8 +146,13 @@ class Device extends Component {
         {this.state.showRemoveForm && (
           <div className="rounded p-3 mt-3 w-100 bg-white clearfix">
             <div className="mb-2 text-center">Remove this device?</div>
-            <button type="submit" className="btn btn-danger" onClick={this.handleRemove.bind(this)}>Remove</button>
-            <button type="button" className="btn btn-secondary float-right" onClick={this.toggleRemoveForm.bind(this)}>Close</button>
+            {this.state.sending ? (<div className="mt-2 text-warning text-center">Removing...</div>) : (
+              <div>
+                <button type="submit" className="btn btn-danger" onClick={this.handleRemove.bind(this)}>Remove</button>
+                <button type="button" className="btn btn-secondary float-right" onClick={this.toggleRemoveForm.bind(this)}>Close</button>
+              </div>
+            )}
+            {this.state.error && (<div className="mt-2 text-danger text-center">{this.state.error}</div>)}
           </div>
         )}
       </li>
@@ -152,12 +162,9 @@ class Device extends Component {
 
 
 const mapStateToProps = state => ({
-  editing: state.devices.editing,
-  editError: state.devices.editError,
-
   currentDeviceId: state.devices.currentDeviceId,
   focusDeviceId: state.devices.focusDeviceId,
-  selectedDevice: state.devices.selectedDevice,
+  actionDevice: state.devices.actionDevice,
 });
 
 const mapDispatchToProps = dispatch => ({
@@ -167,8 +174,8 @@ const mapDispatchToProps = dispatch => ({
   setDevice: (device) => {
     dispatch(devicesActions.setDevice(device));
   },
-  removeDevice: (id) => {
-    dispatch(devicesActions.removeDevice(id));
+  removeDevice: (device) => {
+    dispatch(devicesActions.removeDevice(device));
   },
   setCurrentDevice: (device) => {
     dispatch(devicesActions.setCurrentDevice(device));

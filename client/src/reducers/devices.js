@@ -6,19 +6,12 @@ import cookie from 'react-cookies'
 const devices = {
   currentDeviceId: null,
   focusDeviceId: null,
-
-  selectedDevice: null,
+  actionDevice: null,
 
   isFetching: false,
-  isAdding: false,
-  errorAdd: false,
-
-  editing: false,
-  editError: false,
-
-  isRemoving: false,
-  errorRemove: false,
+  
   isUpdating: false,
+
   list: []
 };
 
@@ -34,12 +27,7 @@ export default (state = devices, action) => {
       state.focusDeviceId = action.device.id;
       cookie.save('focus_device', action.device.id, { path: '/' })
       return { ...state }
-
-    case actions.SELECT_DEVICE:
-      return { ...state, selectedDevice: action.device }
-    case actions.UNSELECT_DEVICE:
-      return { ...state, selectedDevice: null }
-
+      
 
     case actions.REQUEST_DEVICES:
       return { ...state, isFetching: true }
@@ -56,59 +44,73 @@ export default (state = devices, action) => {
       return { ...state, isFetching: false }
 
 
-    case actions.ADD_DEVICE:
-      return { ...state, errorAdd: false }
-    case actions.REQUEST_ADD_DEVICE:
-      return { ...state, isAdding: true }
-    case actions.RECEIVE_ADD_DEVICE:
+    case actions.DEVICE_ADD:
+      return {
+        ...state,
+        actionDevice: { sending: true, error: false },
+      }
+    case actions.DEVICE_ADD_DONE:
+      state.actionDevice = { sending: false }
       state.list.push(action.device);
-      return { ...state, isAdding: false }
-    case actions.RECEIVE_FAIL_ADD_DEVICE:
-      return { ...state, errorAdd: action.error }
+      return { ...state }
+    case actions.DEVICE_ADD_FAIL:
+      state.actionDevice = {
+        error: action.error.message,
+        sending: false,
+      }
+      return { ...state }
 
 
-    case actions.SET_DEVICE:
-      return { ...state, editing: action.device.id, editError: false }
-    /*
-    case actions.REQUEST_SET_DEVICE:
-      return { ...state, editing: true }
-    */
-    case actions.RECEIVE_SET_DEVICE:
+    case actions.DEVICE_EDIT:
+      return {
+        ...state,
+        actionDevice: { id: action.device.id, sending: true, error: false },
+      }
+    case actions.DEVICE_EDIT_DONE:
+      state.actionDevice.sending = false
       state.list = state.list.map(function (device) {
         return device.id == action.device.id ? action.device : device;
       });
-      return { ...state, editing: false }
-    case actions.RECEIVE_FAIL_SET_DEVICE:
-      let error = {
-        id: state.editing,
-        message: action.error.message
+      return { ...state }
+    case actions.DEVICE_EDIT_FAIL:
+      state.actionDevice = {
+        id: state.actionDevice.id || state.error.id,
+        error: action.error.message,
+        sending: false,
       }
-      return { ...state, editError: error, editing: false }
+      return { ...state }
 
 
-    case actions.REMOVE_DEVICE:
-      return { ...state, errorRemove: false }
-    case actions.REQUEST_REMOVE_DEVICE:
-      return { ...state, isRemoving: true }
-    case actions.RECEIVE_REMOVE_DEVICE:
+    case actions.DEVICE_REMOVE:
+      return {
+        ...state,
+        actionDevice: { id: action.device.id, sending: true, error: false },
+      }
+    case actions.DEVICE_REMOVE_DONE:
+      state.actionDevice = false
       state.list = state.list.filter(function (device) {
         return device.id != action.device.id;
       });
-      return { ...state, isRemoving: false, }
-    case actions.RECEIVE_FAIL_REMOVE_DEVICE:
-      return { ...state, errorRemove: action.error }
+      return { ...state }
+    case actions.DEVICE_REMOVE_FAIL:
+      state.actionDevice = {
+        id: state.actionDevice.id || state.error.id,
+        error: action.error.message,
+        sending: false,
+      }
+      return { ...state }
 
 
-    case actions.SET_DEVICE_POSITION:
+    case actions.DEVICE_EDIT_POSITION:
       return { ...state, errorSetPosition: false }
-    case actions.REQUEST_SET_DEVICE_POSITION:
+    case actions.DEVICE_EDIT_POSITION_REQUEST:
       return { ...state, isUpdating: true }
-    case actions.RECEIVE_SET_DEVICE_POSITION:
+    case actions.DEVICE_EDIT_POSITION_DONE:
       state.list = state.list.map(function (device) {
         return device.id == action.device.id ? action.device : device;
       });
       return { ...state, isUpdating: false }
-    case actions.RECEIVE_FAIL_SET_DEVICE_POSITION:
+    case actions.DEVICE_EDIT_POSITION_FAIL:
       return { ...state, errorSetPosition: action.error }
 
 

@@ -27,12 +27,20 @@ const Device = dbSession.define('device', {
   latitude: {
     type: Sequelize.DECIMAL(10, 8),
     allowNull: true,
-    unique: false
+    validate: { min: -90, max: 90 }
   },
   longitude: {
     type: Sequelize.DECIMAL(11, 8),
     allowNull: true,
-    unique: false
+    validate: { min: -180, max: 180 }
+  }
+}, {
+  validate: {
+    nameEmpty() {
+      if (!this.name) {
+        throw new Error('Name is require')
+      }
+    }
   }
 });
 

@@ -28,9 +28,9 @@ export function* watchFetchDevice() {
 
 
 export function* addDevice(data) {
-  yield put(actions.requestAddDevice())
+  yield put(actions.requestAddDevice(data.device))
   try {
-    const { response, error } = yield call(api.devices.add, data)
+    const { response, error } = yield call(api.devices.add, data.device)
     if (response) {
       yield put(actions.receiveAddDevice(response))
     } else {
@@ -42,14 +42,14 @@ export function* addDevice(data) {
 }
 
 export function* watchAddDevice() {
-  yield takeEvery(actions.ADD_DEVICE, addDevice);
+  yield takeEvery(actions.DEVICE_ADD, addDevice);
 }
 
 
 export function* setDevice(data) {
-  yield put(actions.requestSetDevice(data))
+  yield put(actions.requestSetDevice(data.device))
   try {
-    const { response, error } = yield call(api.devices.set, data)
+    const { response, error } = yield call(api.devices.set, data.device)
     if (response) {
       yield put(actions.receiveSetDevice(response))
     } else {
@@ -61,14 +61,14 @@ export function* setDevice(data) {
 }
 
 export function* watchSetDevice() {
-  yield takeEvery(actions.SET_DEVICE, setDevice);
+  yield takeEvery(actions.DEVICE_EDIT, setDevice);
 }
 
 
-export function* removeDevice(id) {
-  yield put(actions.requestRemoveDevice(id))
+export function* removeDevice(data) {
+  yield put(actions.requestRemoveDevice(data.device))
   try {
-    const { response, error } = yield call(api.devices.remove, data)
+    const { response, error } = yield call(api.devices.remove, data.device)
     if (response) {
       yield put(actions.receiveRemoveDevice(response))
     } else {
@@ -80,7 +80,7 @@ export function* removeDevice(id) {
 }
 
 export function* watchRemoveDevice() {
-  yield takeEvery(actions.REMOVE_DEVICE, removeDevice);
+  yield takeEvery(actions.DEVICE_REMOVE, removeDevice);
 }
 
 
@@ -99,7 +99,7 @@ export function* setDevicePosition(data) {
 }
 
 export function* watchSetDevicePosition() {
-  yield takeEvery(actions.SET_DEVICE_POSITION, setDevicePosition);
+  yield takeEvery(actions.DEVICE_EDIT_POSITION, setDevicePosition);
 }
 
 

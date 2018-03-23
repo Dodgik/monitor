@@ -18,25 +18,25 @@ export const REQUEST_DEVICES = 'REQUEST_DEVICES'
 export const RECEIVE_DEVICES = 'RECEIVE_DEVICES'
 export const RECEIVE_FAIL_DEVICES = 'RECEIVE_FAIL_DEVICES'
 
-export const ADD_DEVICE = 'ADD_DEVICE'
-export const REQUEST_ADD_DEVICE = 'REQUEST_ADD_DEVICE'
-export const RECEIVE_ADD_DEVICE = 'RECEIVE_ADD_DEVICE'
-export const RECEIVE_FAIL_ADD_DEVICE = 'RECEIVE_FAIL_ADD_DEVICE'
+export const DEVICE_ADD = 'DEVICE_ADD'
+export const DEVICE_ADD_REQUEST = 'DEVICE_ADD_REQUEST'
+export const DEVICE_ADD_DONE = 'DEVICE_ADD_DONE'
+export const DEVICE_ADD_FAIL = 'DEVICE_ADD_FAIL'
 
-export const SET_DEVICE = 'SET_DEVICE'
-export const REQUEST_SET_DEVICE = 'REQUEST_SET_DEVICE'
-export const RECEIVE_SET_DEVICE = 'RECEIVE_SET_DEVICE'
-export const RECEIVE_FAIL_SET_DEVICE = 'RECEIVE_FAIL_SET_DEVICE'
+export const DEVICE_EDIT = 'DEVICE_EDIT'
+export const DEVICE_EDIT_REQUEST = 'DEVICE_EDIT_REQUEST'
+export const DEVICE_EDIT_DONE = 'DEVICE_EDIT_DONE'
+export const DEVICE_EDIT_FAIL = 'DEVICE_EDIT_FAIL'
 
-export const REMOVE_DEVICE = 'REMOVE_DEVICE'
-export const REQUEST_REMOVE_DEVICE = 'REQUEST_REMOVE_DEVICE'
-export const RECEIVE_REMOVE_DEVICE = 'RECEIVE_REMOVE_DEVICE'
-export const RECEIVE_FAIL_REMOVE_DEVICE = 'RECEIVE_FAIL_REMOVE_DEVICE'
+export const DEVICE_REMOVE = 'DEVICE_REMOVE'
+export const DEVICE_REMOVE_REQUEST = 'DEVICE_REMOVE_REQUEST'
+export const DEVICE_REMOVE_DONE = 'DEVICE_REMOVE_DONE'
+export const DEVICE_REMOVE_FAIL = 'DEVICE_REMOVE_FAIL'
 
-export const SET_DEVICE_POSITION = 'SET_DEVICE_POSITION'
-export const REQUEST_SET_DEVICE_POSITION = 'REQUEST_SET_DEVICE_POSITION'
-export const RECEIVE_SET_DEVICE_POSITION = 'RECEIVE_SET_DEVICE_POSITION'
-export const RECEIVE_FAIL_SET_DEVICE_POSITION = 'RECEIVE_FAIL_SET_DEVICE_POSITION'
+export const DEVICE_EDIT_POSITION = 'DEVICE_EDIT_POSITION'
+export const DEVICE_EDIT_POSITION_REQUEST = 'DEVICE_EDIT_POSITION_REQUEST'
+export const DEVICE_EDIT_POSITION_DONE = 'DEVICE_EDIT_POSITION_DONE'
+export const DEVICE_EDIT_POSITION_FAIL = 'DEVICE_EDIT_POSITION_FAIL'
 
 export const SELECT_REDDIT = 'SELECT_REDDIT'
 export const INVALIDATE_REDDIT = 'INVALIDATE_REDDIT'
@@ -60,40 +60,40 @@ export const receiveDevices = (list) => ({ type: RECEIVE_DEVICES, list, received
 export const receiveFailDevices = (error) => ({ type: RECEIVE_FAIL_DEVICES, error, })
 
 
-export const addDevice = (device) => ({ type: ADD_DEVICE, device, })
+export const addDevice = (device) => ({ type: DEVICE_ADD, device, })
 
-export const requestAddDevice = (device) => ({ type: REQUEST_ADD_DEVICE, device, })
+export const requestAddDevice = (device) => ({ type: DEVICE_ADD_REQUEST, device, })
 
-export const receiveAddDevice = (device) => ({ type: RECEIVE_ADD_DEVICE, device, })
+export const receiveAddDevice = (device) => ({ type: DEVICE_ADD_DONE, device, })
 
-export const receiveFailAddDevice = (error) => ({ type: RECEIVE_FAIL_ADD_DEVICE, error, })
-
-
-export const setDevice = (device) => ({ type: SET_DEVICE, device, })
-
-export const requestSetDevice = (device) => ({ type: REQUEST_SET_DEVICE, device, })
-
-export const receiveSetDevice = (device) => ({ type: RECEIVE_SET_DEVICE, device, })
-
-export const receiveFailSetDevice = (error) => ({ type: RECEIVE_FAIL_SET_DEVICE, error, })
+export const receiveFailAddDevice = (error) => ({ type: DEVICE_ADD_FAIL, error, })
 
 
-export const removeDevice = (id) => ({ type: REMOVE_DEVICE, id, })
+export const setDevice = (device) => ({ type: DEVICE_EDIT, device, })
 
-export const requestRemoveDevice = (id) => ({ type: REQUEST_REMOVE_DEVICE, id, })
+export const requestSetDevice = (device) => ({ type: DEVICE_EDIT_REQUEST, device, })
 
-export const receiveRemoveDevice = (device) => ({ type: RECEIVE_REMOVE_DEVICE, device, })
+export const receiveSetDevice = (device) => ({ type: DEVICE_EDIT_DONE, device, })
 
-export const receiveFailRemoveDevice = (error) => ({ type: RECEIVE_FAIL_REMOVE_DEVICE, error, })
+export const receiveFailSetDevice = (error) => ({ type: DEVICE_EDIT_FAIL, error, })
 
 
-export const setDevicePosition = (device) => ({ type: SET_DEVICE_POSITION, device, })
+export const removeDevice = (device) => ({ type: DEVICE_REMOVE, device, })
 
-export const requestSetDevicePosition = (device) => ({ type: REQUEST_SET_DEVICE_POSITION, device, })
+export const requestRemoveDevice = (device) => ({ type: DEVICE_REMOVE_REQUEST, device, })
 
-export const receiveSetDevicePosition = (device) => ({ type: RECEIVE_SET_DEVICE_POSITION, device, })
+export const receiveRemoveDevice = (device) => ({ type: DEVICE_REMOVE_DONE, device, })
 
-export const receiveFailSetDevicePosition = (error) => ({ type: RECEIVE_FAIL_SET_DEVICE_POSITION, error, })
+export const receiveFailRemoveDevice = (error) => ({ type: DEVICE_REMOVE_FAIL, error, })
+
+
+export const setDevicePosition = (device) => ({ type: DEVICE_EDIT_POSITION, device, })
+
+export const requestSetDevicePosition = (device) => ({ type: DEVICE_EDIT_POSITION_REQUEST, device, })
+
+export const receiveSetDevicePosition = (device) => ({ type: DEVICE_EDIT_POSITION_DONE, device, })
+
+export const receiveFailSetDevicePosition = (error) => ({ type: DEVICE_EDIT_POSITION_FAIL, error, })
 
 
 

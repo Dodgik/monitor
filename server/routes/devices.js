@@ -92,8 +92,9 @@ router.post('/set', function (req, res, next) {
     Device.findById(id).then(upDevice => {
       res.json({ 'id': upDevice.id, 'name': upDevice.name, 'latitude': upDevice.latitude, 'longitude': upDevice.longitude });
     }).catch(function (err) {
-      console.log('devices-set-find rejected: ', err);
-      res.json(err);
+      let error = { id, message: 'Not found' }
+      console.log('devices-set-find rejected: ', error);
+      res.status(400).json(error);
     });
   }).catch(function (err) {
     let error = { id, message: err.errors[0].message }
