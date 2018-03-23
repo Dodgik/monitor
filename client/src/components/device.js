@@ -9,7 +9,6 @@ class Device extends Component {
     this.state = {
       selectedDevice: null,
       inputName: null,
-      isCurrent: props.currentDeviceId == props.id,
       showMenu: false,
       showEditForm: false,
       showSetCurrentForm: false,
@@ -18,22 +17,14 @@ class Device extends Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    let state = null;
-    if (this.state.isCurrent != (nextProps.currentDeviceId == this.props.currentDeviceId)) {
-      state = { ...state, isCurrent: !this.state.isCurrent };
-    }
-
     if (nextProps.actionDevice && this.props.id == nextProps.actionDevice.id) {
-      state = { ...state, ...nextProps.actionDevice };
+      let state = { ...nextProps.actionDevice };
 
       if (this.state.sending && !state.sending && !state.error && this.state.showEditForm) {
           state.showEditForm = false;
       }
-    }
-
-    if (state) {
-      console.log('---Device.componentWillReceiveProps:', nextProps)
-      console.log('---Device.componentWillReceiveProps setState:', state)
+      //console.log('---Device.componentWillReceiveProps:', nextProps)
+      //console.log('---Device.componentWillReceiveProps setState:', state)
       this.setState(state);
     }
   }
@@ -84,11 +75,12 @@ class Device extends Component {
 
   handleSetCurrent(e) {
     e.preventDefault();
+    this.setState({ showSetCurrentForm: false });
     this.props.setCurrentDevice({ id: this.props.id });
   }
 
   render() {
-    console.warn('-->Device.render:', this.props);
+    //console.warn('-->Device.render:', this.props);
     const { id, name, currentDeviceId, focusDeviceId } = this.props;
 
     let className = 'list-group-item list-group-item-action list-group-item-primary';
@@ -138,7 +130,7 @@ class Device extends Component {
             <div className="mb-2 text-center">
               {currentDeviceId == id ? ('Unset') : ('Set')} as current device?
             </div>
-            <button type="submit" className="btn btn-primary" onClick={this.handleSetCurrent.bind(this)}>{this.state.isCurrent? ('Unset') : ('Set')}</button>
+            <button type="submit" className="btn btn-primary" onClick={this.handleSetCurrent.bind(this)}>{currentDeviceId == id ? ('Unset') : ('Set')}</button>
             <button type="button" className="btn btn-secondary float-right" onClick={this.toggleSetCurrentForm.bind(this)}>Close</button>
           </div>
         )}
