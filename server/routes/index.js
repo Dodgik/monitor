@@ -1,9 +1,19 @@
-import express from 'express';
+var express = require('express');
+var path = require('path');
 var passport = require('passport')
 var session = require('express-session')
 var bodyParser = require('body-parser')
-import devices from './devices';
-import ssr from './ssr';
+
+const Email = require('email-templates');
+const nodemailer = require('nodemailer');
+
+const mailer = require('../lib/mailer');
+
+var async = require('async');
+var crypto = require('crypto');
+
+var devices = require('./devices');
+var ssr = require('./ssr');
 
 const app = express();
 
@@ -22,6 +32,11 @@ require('../config/passport/passport.js')(passport, User);
 
 app.use('/a/devices', devices);
 
+app.use(function (req, res, next) {
+  res.header("Access-Control-Allow-Origin", "*");
+  res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+  next();
+});
 app.post('/login', function (req, res, next) {
   passport.authenticate('local-signInOrUp', function (err, user, info) {
     if (err) {
@@ -65,8 +80,63 @@ app.get('/logout', function (req, res) {
   res.redirect('/');
 });
 
+app.post('/forgot', function (req, res, next) {
+  const email = req.body.email;
+  console.log('forgot to email:', email);
+
+  async.waterfall([
+    function(done) {
+      console.log('-->1');
+      crypto.randomBytes(16, function(err, buf) {
+        var token = buf.toString('hex');
+        done(err, token);
+      });
+    },
+    function(token, done) {
+      console.log('-->2 token:', token);
+      User.findOne({
+        attributes: ['id', 'email'],
+        where: { email: email }
+      })
+      .then(user => {
+        if (user) {
+          user.reset_code = token;
+          user.save().then(user => {
+            console.log('-->2 user token saved');
+            done(null, user);
+          }).catch(error => {
+            console.log('-->2 user token catch:', error);
+            done({ status: 500, message: 'Server error' });
+          });
+        } else {
+          done({ status: 400, message: 'User not found' });
+        }
+      })
+    },
+    function(user, done) {
+      console.log('-->3 sendEmail');
+      mailer.sendEmail('forgot', user)
+      .then(user => {
+        console.log('-->3 email sent');
+        done(null, user);
+      }).catch(error => {
+        console.log('-->3 sent email error:', error);
+        done({ status: 500, message: 'Server error' });
+      });
+      done(null, 'done')
+    }
+  ], function(err) {
+    console.log('last callback err:', err);
+    if (err) {
+      res.status(err.status).json({ message: err.message });
+    }
+  });
+});
+
 function ensureAuthenticated(req, res, next) {
-  if (req.isAuthenticated()) { return next(); }
+  if (req.isAuthenticated()) {
+    return next();
+  }
   res.redirect('/')
 }
 
@@ -74,9 +144,13 @@ app.get('/protected', ensureAuthenticated, function (req, res) {
   res.send("acess granted");
 });
 
+//app.set('views', path.join(__dirname, '../views'));
 app.set('view engine', 'ejs');
 
+console.log('__dirname=', __dirname);
+console.log('path=', path.join(__dirname, 'public'));
 app.use(express.static('public'));
+//app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/*', ssr);
 

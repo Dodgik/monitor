@@ -12,6 +12,7 @@ const postProps = {
 
 const fetchWrap = (path, props = postProps, data) => {
   let { apiHost } = app;
+  apiHost = apiHost || '/';
   const initProps = Object.assign(props, { body: JSON.stringify(data) });
   let response;
   return fetch(`${apiHost}${path}`, initProps)

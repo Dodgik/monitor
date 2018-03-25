@@ -8,6 +8,7 @@ module.exports = {
   devtool: 'source-map',
   entry: [
     './routes/index.js',
+    //'./app.js',
   ],
   target: 'node',
   output: {

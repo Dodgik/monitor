@@ -1,0 +1,53 @@
+const Email = require('email-templates');
+const nodemailer = require('nodemailer');
+
+var path = require('path');
+const env = process.env.NODE_ENV || 'development';
+const config = require('../config/config.js')[env];
+
+
+const sendEmail = function(template, user) {
+  //console.log('forgot tpls:', tpls);
+
+  const tplsPath = 'templates/emails';
+
+  const email = new Email({
+    views: { root: tplsPath },
+    message: { from: config.mail_sender },
+    // uncomment below to send emails in development/test env:
+    //send: true,
+    transport: nodemailer.createTransport({
+      service: 'gmail',
+      auth: {
+        user: config.mail_user,
+        pass: config.mail_password
+      }
+    }),
+    juiceResources: {
+      webResources: {
+        relativeTo: tplsPath
+      }
+    }
+  });
+
+  const locals = {
+      name: 'user',
+      recoveryUrl: 'recovery-url',
+  };
+
+
+  return email
+    .send({
+      template: template,
+      message: {
+        to: user.email
+      },
+      locals: locals
+    })
+    /*
+    .then(console.log)
+    .catch(console.error);
+    */
+};
+
+module.exports.sendEmail = sendEmail

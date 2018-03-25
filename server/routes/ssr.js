@@ -1,4 +1,18 @@
-import express from 'express';
+var express = require('express');
+var passport = require('passport')
+var session = require('express-session')
+var bodyParser = require('body-parser')
+/*
+var React = require('react');
+var ReactDOMServer = require('react-dom/server');
+var { createStore } = require('redux');
+var { Provider } = require('react-redux');
+var { StaticRouter } = require('react-router');
+var reducers = require('../../client/src/reducers/index');
+var { LIST_ACTIONS } = require('../../client/src/consts/action_types');
+var App = require('../../client/src/app');
+*/
+/*
 import React from 'react';
 import ReactDOMServer from 'react-dom/server';
 import { createStore } from 'redux';
@@ -7,11 +21,8 @@ import { StaticRouter } from 'react-router';
 import reducers from '../../client/src/reducers/index';
 import { LIST_ACTIONS } from '../../client/src/consts/action_types';
 import App from '../../client/src/app';
+*/
 
-
-var passport = require('passport')
-var session = require('express-session')
-var bodyParser = require('body-parser')
 
 const app = express();
 
@@ -45,8 +56,9 @@ router.get('/', (req, res) => {
   /*
     http://redux.js.org/docs/recipes/ServerRendering.html
   */
-  const store = createStore(reducers);
 
+    /*
+ store = createStore(reducers);
   store.dispatch({
     user2: 'vas1',
     user: req.user,
@@ -57,9 +69,10 @@ router.get('/', (req, res) => {
       It provides a third-party extension point between dispatching an action, and the moment it reaches the reducer.`,
     },
   });
-
+  */
   const context = { user: user };
-
+  const html = '';
+  /*
   const html = ReactDOMServer.renderToString(
     <Provider store={store}>
       <StaticRouter
@@ -70,8 +83,9 @@ router.get('/', (req, res) => {
       </StaticRouter>
     </Provider>,
   );
-
   const finalState = store.getState();
+  */
+  const finalState = {};
 
   if (context.url) {
     res.writeHead(301, {
@@ -79,7 +93,8 @@ router.get('/', (req, res) => {
     });
     res.end();
   } else {
-    res.status(200).render('../views/index.ejs', {
+    //res.status(200).render('../views/index.ejs', {
+    res.status(200).render('index', {
       html,
       script: JSON.stringify(finalState),
       user: JSON.stringify(user),
@@ -87,4 +102,4 @@ router.get('/', (req, res) => {
   }
 });
 
-export default router;
+module.exports = router;

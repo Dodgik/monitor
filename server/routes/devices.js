@@ -1,4 +1,4 @@
-import express from 'express';
+var express = require('express');
 
 var passport = require('passport')
 var session = require('express-session')
@@ -9,7 +9,6 @@ const app = express();
 //For BodyParser
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
-
 
 // For Passport
 app.use(session({ secret: 'keyboard cat', resave: true, saveUninitialized: true })); // session secret
@@ -159,4 +158,4 @@ router.post('/pos', function (req, res, next) {
   });
 });
 
-export default router;
+module.exports = router;
