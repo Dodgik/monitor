@@ -3,6 +3,7 @@
 import { take, put, call, fork, select, takeEvery } from 'redux-saga/effects'
 import * as actions from '../actions/devices_actions'
 import { selectedRedditSelector, devicesListSelector } from '../reducers/selectors'
+import * as user_actions from '../actions/user_actions'
 
 import api from '../api'
 
@@ -105,6 +106,26 @@ export function* watchSetDevicePosition() {
 
 
 
+export function* userForgot(data) {
+  yield put(user_actions.forgotRequest(data.user))
+  try {
+    const { response, error } = yield call(api.user.forgot, data.user)
+    if (response) {
+      yield put(user_actions.receiveForgotDone(response))
+    } else {
+      yield put(user_actions.receiveForgotFail(error))
+    }
+  } catch (e) {
+    yield put(user_actions.receiveForgotFail(e))
+  }
+}
+
+export function* watchUserForgot() {
+  yield takeEvery(user_actions.FORGOT_SEND, userForgot);
+}
+
+
+
 export function* invalidateReddit() {
   while (true) {
     const { reddit } = yield take(actions.INVALIDATE_REDDIT)
@@ -140,4 +161,7 @@ export default function* root() {
   yield fork(watchSetDevice)
   yield fork(watchRemoveDevice)
   yield fork(watchSetDevicePosition)
+
+
+  yield fork(watchUserForgot)
 }

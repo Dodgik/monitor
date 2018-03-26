@@ -42,7 +42,8 @@ require('../config/passport/passport.js')(passport, User);
 
 const router = express.Router();
 
-router.get('/', (req, res) => {
+function rootHandler(req, res) {
+  console.log("-->ssr-rootHandler: ", req.params);
   //console.log("-->ssr-req-user: ", req.user);
   //console.log("-->ssr-req-session: ", req.session);
   //console.log("-->ssr-req-isAuthenticated: ", req.isAuthenticated());
@@ -50,6 +51,9 @@ router.get('/', (req, res) => {
     displayName: 'Guest',
     loggedIn: req.isAuthenticated()
   };
+  if (req.params.code) {
+    user.recovery = req.params.code
+  }
   if (req.isAuthenticated() && req.user) {
     user.displayName = req.user.email.split('@')[0]
   }
@@ -85,7 +89,7 @@ router.get('/', (req, res) => {
   );
   const finalState = store.getState();
   */
-  const finalState = {};
+  const finalState = { user,};
 
   if (context.url) {
     res.writeHead(301, {
@@ -100,6 +104,9 @@ router.get('/', (req, res) => {
       user: JSON.stringify(user),
     });
   }
-});
+}
+
+router.get('/reset/:code', rootHandler);
+router.get('/', rootHandler);
 
 module.exports = router;

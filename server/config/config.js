@@ -5,6 +5,9 @@ module.exports = {
     "database": "monitor",
     "host": "127.0.0.1",
     "dialect": "mssql",
+    "dialectOptions": {
+      "instanceName": "SYMBIOSIS2"
+    },
 
     "mail_sender": "vasiliy017@gmail.com",
     "mail_user": "vasiliy017@gmail.com",
@@ -16,6 +19,9 @@ module.exports = {
     "database": "",
     "host": "",
     "dialect": "mysql",
+    "dialectOptions": {
+      "instanceName": "SYMBIOSIS2"
+    },
 
     "mail_sender": "vasiliy017@gmail.com",
     "mail_user": "vasiliy017@gmail.com",
@@ -25,8 +31,11 @@ module.exports = {
     "username": "sa",
     "password": "avas",
     "database": "monitor",
-    "mail_user": "127.0.0.1",
+    "host": "127.0.0.1",
     "dialect": "mssql",
+    "dialectOptions": {
+      "instanceName": "SYMBIOSIS2"
+    },
 
     "mail_sender": "vasiliy017@gmail.com",
     "mail_user": "vasiliy017@gmail.com",

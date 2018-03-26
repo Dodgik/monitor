@@ -12,7 +12,6 @@ const mailer = require('../lib/mailer');
 var async = require('async');
 var crypto = require('crypto');
 
-var devices = require('./devices');
 var ssr = require('./ssr');
 
 const app = express();
@@ -30,7 +29,11 @@ app.use(passport.session()); // persistent login sessions
 var User = require('../db/models/users');
 require('../config/passport/passport.js')(passport, User);
 
+var devices = require('./devices');
 app.use('/a/devices', devices);
+
+var userRouter = require('./user');
+app.use('/a/user', userRouter);
 
 app.use(function (req, res, next) {
   res.header("Access-Control-Allow-Origin", "*");
@@ -87,7 +90,7 @@ app.post('/forgot', function (req, res, next) {
   async.waterfall([
     function(done) {
       console.log('-->1');
-      crypto.randomBytes(16, function(err, buf) {
+      crypto.randomBytes(17, function(err, buf) {
         var token = buf.toString('hex');
         done(err, token);
       });
@@ -123,12 +126,13 @@ app.post('/forgot', function (req, res, next) {
         console.log('-->3 sent email error:', error);
         done({ status: 500, message: 'Server error' });
       });
-      done(null, 'done')
     }
   ], function(err) {
     console.log('last callback err:', err);
     if (err) {
       res.status(err.status).json({ message: err.message });
+    } else {
+      res.json({ message: 'Recovery email was sent' });
     }
   });
 });
@@ -152,7 +156,7 @@ console.log('path=', path.join(__dirname, 'public'));
 app.use(express.static('public'));
 //app.use(express.static(path.join(__dirname, 'public')));
 
-app.use('/*', ssr);
+app.use('/', ssr);
 
 var server = app.listen(3000, '127.0.0.1', () => {
   console.log('App listening at http://%s:%s', server.address().address, server.address().port);

@@ -7,14 +7,25 @@
     "dialect": "mssql",
     "dialectOptions": {
       "instanceName": "SYMBIOSIS2"
-    }
+    },
+
+    "mail_sender": "vasiliy017@gmail.com",
+    "mail_user": "vasiliy017@gmail.com",
+    "mail_password": ""
   },
   "test": {
     "username": "sa",
     "password": null,
     "database": "",
     "host": "",
-    "dialect": "mysql"
+    "dialect": "mysql",
+    "dialectOptions": {
+      "instanceName": "SYMBIOSIS2"
+    },
+
+    "mail_sender": "vasiliy017@gmail.com",
+    "mail_user": "vasiliy017@gmail.com",
+    "mail_password": ""
   },
   "production": {
     "username": "sa",
@@ -24,6 +35,10 @@
     "dialect": "mssql",
     "dialectOptions": {
       "instanceName": "SYMBIOSIS2"
-    }
+    },
+
+    "mail_sender": "vasiliy017@gmail.com",
+    "mail_user": "vasiliy017@gmail.com",
+    "mail_password": ""
   }
 }
