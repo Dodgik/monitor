@@ -1,26 +1,14 @@
 module.exports = {
   "development": {
-    "username": "sa",
-    "password": "avas",
-    "database": "monitor",
-    "host": "127.0.0.1",
-    "dialect": "mssql",
-    "dialectOptions": {
-      "instanceName": "SYMBIOSIS2"
-    },
+    "protocol": "http",
+    "host": "localhost:3000",
 
-    "mail_sender": "vasiliy017@gmail.com",
-    "mail_user": "vasiliy017@gmail.com",
-    "mail_password": "",
-  },
-  "test": {
-    "username": "sa",
-    "password": null,
-    "database": "",
-    "host": "",
-    "dialect": "mysql",
-    "dialectOptions": {
-      "instanceName": "SYMBIOSIS2"
+    "database": {
+      "username": "sa",
+      "password": "avas",
+      "database": "monitor",
+      "host": "127.0.0.1",
+      "dialect": "mssql",
     },
 
     "mail_sender": "vasiliy017@gmail.com",
@@ -28,13 +16,15 @@ module.exports = {
     "mail_password": "",
   },
   "production": {
-    "username": "sa",
-    "password": "avas",
-    "database": "monitor",
-    "host": "127.0.0.1",
-    "dialect": "mssql",
-    "dialectOptions": {
-      "instanceName": "SYMBIOSIS2"
+    "protocol": "http",
+    "host": "localhost:3000",
+
+    "database": {
+      "username": "sa",
+      "password": "avas",
+      "database": "monitor",
+      "host": "127.0.0.1",
+      "dialect": "mssql",
     },
 
     "mail_sender": "vasiliy017@gmail.com",

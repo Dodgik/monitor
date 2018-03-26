@@ -43,6 +43,31 @@ export default (state = user, action) => {
         error: action.error.message,
       }
 
+    case user_actions.RESET_CLOSE:
+      return {
+        ...state,
+        recovery: false,
+        message: false,
+        error: false,
+      }
+    case user_actions.RESET_SEND:
+      return {
+        ...state,
+        sending: true,
+      }
+    case user_actions.RESET_DONE:
+      return {
+        ...state,
+        sending: false,
+        message: action.user.message,
+      }
+    case user_actions.RESET_FAIL:
+      return {
+        ...state,
+        sending: false,
+        error: action.error.message,
+      }
+
     default:
       return state;
   }

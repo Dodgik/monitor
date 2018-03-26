@@ -30,9 +30,12 @@ const sendEmail = function(template, user) {
     }
   });
 
+  let recoveryUrl = `${config.protocol}://${config.host}/reset/${user.reset_code}`;
   const locals = {
+      email: user.email,
+      reset_code: user.reset_code,
       name: 'user',
-      recoveryUrl: 'recovery-url',
+      recoveryUrl: recoveryUrl,
   };
 
 

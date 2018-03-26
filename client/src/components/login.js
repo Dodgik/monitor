@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import { Link } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import axios from 'axios';
 import { connect } from 'react-redux';
@@ -69,34 +70,19 @@ class Login extends Component {
     return false;
   }
 
-  toggleReset(e) {
-    e.preventDefault();
-    e.stopPropagation();
-    //this.props.openForgot();
-    //this.setState({ showForgot: !this.state.showForgot });
-    return false;
+  handleCloseReset() {
+    this.props.resetClose();
   }
   handleReset() {
     var pass = this.refs.newPassword.value;
     var passConfirm = this.refs.newPasswordConfirm.value;
     console.log('handleReset: ' + pass);
 
-    //this.props.sendForgot({ email: this.state.forgotEmail });
-    /*
-    let apiHost = app.apiHost || '/'
-    axios.post(`${apiHost}forgot`, { email: this.state.forgotEmail },
-      { headers: { 'X-Requested-With': 'XMLHttpRequest' } })
-      .then(function (response) {
-        let res = error.response.data;
-        console.log(res);
-        //window.location.reload()
-      })
-      .catch(function (error) {
-        let err = error.response.data;
-        console.error(err);
-        this.setState({ forgotError: err.message });
-      });
-    */
+    this.props.resetSend({
+      password: pass,
+      passwordConfirm: passConfirm,
+      token: this.props.recovery,
+    });
   }
 
   render () {
@@ -105,7 +91,7 @@ class Login extends Component {
       <div style={{ margin: 10 }} className="text-center">
       {this.props.recovery ? (
         <div>
-          <div method="post" action="forgot">
+          <div method="post" action="reset">
             {this.props.message ? (
               <div>
                 <div className="bg-white rounded p-2 mb-2 font-weight-bold text-center text-success">{this.props.message}</div>
@@ -113,15 +99,15 @@ class Login extends Component {
               </div>
             ) : (
                 <div>
-                  <div className="mb-2">Please enter your email.</div>
+                  <div className="mb-2">Please enter your new password</div>
                   <div className="mb-2">
-                    <input className="form-control" name="password" type="password" placeholder="Password" ref="newPassword" />
+                    <input className="form-control mb-2" name="password" type="password" placeholder="Password" ref="newPassword" />
                     <input className="form-control" name="password_confirm" type="password" placeholder="Same Password" ref="newPasswordConfirm" />
                   </div>
                   {this.props.sending ? (<div className="mt-2 text-warning text-center">Sending...</div>) : (
                     <div className="btn-block text-left clearfix">
                       <button type="submit" className="btn btn-primary" onClick={this.handleReset.bind(this)}>Save</button>
-                      <button type="submit" className="btn btn-secondary float-right" onClick={this.toggleReset.bind(this)}>Cancel</button>
+                      <Link to="/" className="btn btn-secondary float-right" onClick={this.handleCloseReset.bind(this)}>Cancel</Link>
                     </div>
                   )}
                   {this.props.error ? (<div className="text-danger rounded p-0 mt-2 bg-white">{this.props.error}</div>) : (<div className="mb-2 mt-2"></div>)}
@@ -152,7 +138,7 @@ class Login extends Component {
                 </div>
               ) : (
                 <div>
-                  <div className="mb-2">Please enter your email.</div>
+                  <div className="mb-2">Please enter your email</div>
                   <div className="mb-2">
                       <input className="form-control" name="email" type="text" placeholder="Email" onChange={this.handleForgotEmailChange.bind(this)} />
                   </div>
@@ -187,6 +173,12 @@ const mapDispatchToProps = dispatch => ({
   },
   sendForgot: (user) => {
     dispatch(userActions.forgot(user));
+  },
+  resetClose: () => {
+    dispatch(userActions.resetClose());
+  },
+  resetSend: (user) => {
+    dispatch(userActions.resetSend(user));
   },
 });
 

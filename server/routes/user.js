@@ -9,6 +9,7 @@ const nodemailer = require('nodemailer');
 const mailer = require('../lib/mailer');
 var async = require('async');
 var crypto = require('crypto');
+const bCrypt = require('bcrypt-nodejs');
 
 
 const app = express();
@@ -129,5 +130,59 @@ router.post('/forgot', function (req, res, next) {
   });
 });
 
+
+var generateHash = function (password) {
+  return bCrypt.hashSync(password, bCrypt.genSaltSync(8), null);
+};
+
+router.post('/reset', function (req, res, next) {
+  const password = req.body.password;
+  const token = req.body.token;
+  console.log('-->reset to pass:', password);
+
+  async.waterfall([
+    function (done) {
+      console.log('-->1 token:', token);
+      User.findOne({
+        attributes: ['id', 'email'],
+        where: { reset_code: token }
+      })
+        .then(user => {
+          if (user) {
+            var userPassword = generateHash(password);
+            user.password = userPassword;
+            user.reset_code = null;
+            user.save().then(user => {
+              console.log('-->2 user token saved');
+              done(null, user);
+            }).catch(error => {
+              console.log('-->2 user token catch:', error);
+              done({ status: 500, message: 'Server error' });
+            });
+          } else {
+            done({ status: 400, message: 'User not found' });
+          }
+        })
+    },
+    function (user, done) {
+      console.log('-->3 sendEmail');
+      mailer.sendEmail('reset', user)
+        .then(user => {
+          console.log('-->3 email sent');
+          done(null, user);
+        }).catch(error => {
+          console.log('-->3 sent email error:', error);
+          done({ status: 500, message: 'Server error' });
+        });
+    }
+  ], function (err) {
+    console.log('last callback err:', err);
+    if (err) {
+      res.status(err.status).json({ message: err.message });
+    } else {
+      res.json({ message: 'Recovery email was sent' });
+    }
+  });
+});
 
 module.exports = router;

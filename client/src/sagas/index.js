@@ -126,6 +126,25 @@ export function* watchUserForgot() {
 
 
 
+export function* userReset(data) {
+  yield put(user_actions.resetRequest(data.user))
+  try {
+    const { response, error } = yield call(api.user.reset, data.user)
+    if (response) {
+      yield put(user_actions.receiveResetDone(response))
+    } else {
+      yield put(user_actions.receiveResetFail(error))
+    }
+  } catch (e) {
+    yield put(user_actions.receiveResetFail(e))
+  }
+}
+
+export function* watchUserReset() {
+  yield takeEvery(user_actions.RESET_SEND, userReset);
+}
+
+
 export function* invalidateReddit() {
   while (true) {
     const { reddit } = yield take(actions.INVALIDATE_REDDIT)
@@ -164,4 +183,5 @@ export default function* root() {
 
 
   yield fork(watchUserForgot)
+  yield fork(watchUserReset)
 }
