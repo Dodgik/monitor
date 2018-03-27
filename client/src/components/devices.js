@@ -27,6 +27,9 @@ class Devices extends Component {
   stopTimer() {
     clearInterval(this.state.timer);
   }
+  componentWillUnmount() {
+    clearInterval(this.state.timer);
+  }
 
   componentWillReceiveProps(nextProps) {
       console.log('---Devices.componentWillReceiveProps:', nextProps)

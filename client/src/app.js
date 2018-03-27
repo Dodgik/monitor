@@ -12,39 +12,24 @@ import ListItems from './containers/list_items';
 import { connect } from 'react-redux';
 import { viewItem } from './actions/list_actions';
 
-const propTypes = {
-  user: PropTypes.object
-};
-
-const defaultProps = {
-  user: {}
-};
 
 class App extends Component {
-  constructor(props) {
-    super(props);
-
-    this.state = {
-      user: this.props.user
-    };
-  }
-
   render() {
     console.warn('-->App.render:', this.props)
     return (
       <div className="app-root">
         <div className="panel">
           <Header />
-          <LoginPanel {...this.state} />
+          <LoginPanel />
           {/*<ListItems {...this.props} />*/}
           <Menu />
           <Route exact path='/' render={(props) => (
-            <ItemView {...props} user={this.state.user} />
+            <ItemView {...props}  />
           )} />
-            {/*<Home {...props} user={this.state.user} />*/}
-          {/*<Route exact path="/" component={Home} user={this.state.user} />*/}
+            {/*<Home {...props} />*/}
+          {/*<Route exact path="/" component={Home} />*/}
           <Route path='/view/:name' render={(props) => (
-            <ItemView {...props} user={this.state.user} />
+            <ItemView {...props} />
           )} />
           {/*<Route exact path="/view/:name" component={ItemView} />*/}
           {/*<Route exact path='*' component={NotFound} />*/}
@@ -55,8 +40,6 @@ class App extends Component {
   }
 }
 
-App.propTypes = propTypes;
-App.defaultProps = defaultProps;
 /*
 const mapStateToProps = state => ({
   displayName: state.user.displayName,

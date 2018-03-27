@@ -22,6 +22,7 @@ import reducers from '../../client/src/reducers/index';
 import { LIST_ACTIONS } from '../../client/src/consts/action_types';
 import App from '../../client/src/app';
 */
+const { guestUser, loggedInUser } = require('../lib/user_helper');
 
 
 const app = express();
@@ -43,70 +44,34 @@ require('../config/passport/passport.js')(passport, User);
 const router = express.Router();
 
 function rootHandler(req, res) {
-  console.log("-->ssr-rootHandler: ", req.params);
-  //console.log("-->ssr-req-user: ", req.user);
+  //console.log("-->ssr-rootHandler: ", req.params);
+  console.log("-->ssr-req-user: ", req.user);
   //console.log("-->ssr-req-session: ", req.session);
-  //console.log("-->ssr-req-isAuthenticated: ", req.isAuthenticated());
-  var user = {
-    displayName: 'Guest',
-    loggedIn: req.isAuthenticated()
-  };
-  if (req.params.code) {
-    user.recovery = req.params.code
+  let initialState = { };
+  if (req.isAuthenticated()) {
+    initialState.user = loggedInUser(req.user)
+  } else {
+    initialState.user = guestUser(req.user)
   }
-  if (req.isAuthenticated() && req.user) {
-    user.displayName = req.user.email.split('@')[0]
+  if (req.params.token) {
+    initialState.user.recovery = req.params.token
   }
-  /*
-    http://redux.js.org/docs/recipes/ServerRendering.html
-  */
+  console.log("-->ssr-rootHandler initialState: ", initialState);
 
-    /*
- store = createStore(reducers);
-  store.dispatch({
-    user2: 'vas1',
-    user: req.user,
-    type: LIST_ACTIONS.ITEM_ADD,
-    item: {
-      name: 'middleware',
-      description: `Redux middleware solves different problems than Express or Koa middleware, but in a conceptually similar way.
-      It provides a third-party extension point between dispatching an action, and the moment it reaches the reducer.`,
-    },
-  });
-  */
-  const context = { user: user };
-  const html = '';
-  /*
-  const html = ReactDOMServer.renderToString(
-    <Provider store={store}>
-      <StaticRouter
-        location={req.originalUrl}
-        context={context}
-      >
-        <App user={user} />
-      </StaticRouter>
-    </Provider>,
-  );
-  const finalState = store.getState();
-  */
-  const finalState = { user,};
-
-  if (context.url) {
+  const redirectUrl = false;  
+  if (redirectUrl) {
     res.writeHead(301, {
-      Location: context.url,
+      Location: redirectUrl,
     });
     res.end();
   } else {
-    //res.status(200).render('../views/index.ejs', {
     res.status(200).render('index', {
-      html,
-      script: JSON.stringify(finalState),
-      user: JSON.stringify(user),
+      state: JSON.stringify(initialState),
     });
   }
 }
 
-router.get('/reset/:code', rootHandler);
+router.get('/reset/:token', rootHandler);
 router.get('/', rootHandler);
 
 module.exports = router;

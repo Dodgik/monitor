@@ -9,6 +9,9 @@ module.exports = {
       "database": "monitor",
       "host": "127.0.0.1",
       "dialect": "mssql",
+      "dialectOptions": {
+        "instanceName": "SYMBIOSIS2"
+      }
     },
 
     "mail_sender": "vasiliy017@gmail.com",
@@ -25,6 +28,9 @@ module.exports = {
       "database": "monitor",
       "host": "127.0.0.1",
       "dialect": "mssql",
+      "dialectOptions": {
+        "instanceName": "SYMBIOSIS2"
+      }
     },
 
     "mail_sender": "vasiliy017@gmail.com",

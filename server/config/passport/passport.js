@@ -1,7 +1,17 @@
 const bCrypt = require('bcrypt-nodejs');
+const { loggedInUser } = require('../../lib/user_helper');
+
+const generateHash = function (password) {
+  return bCrypt.hashSync(password, bCrypt.genSaltSync(8), null);
+};
+
+const isValidPassword = function (userpass, password) {
+  //console.log("isValidPassword: userpass=", userpass, " password=", password);
+  //console.log("isValidPassword: userpass=", userpass, " hashSync=", bCrypt.hashSync(password, bCrypt.genSaltSync(8), null));
+  return bCrypt.compareSync(password, userpass);
+};
 
 module.exports = function(passport, user) {
-
   var User = user;
   var LocalStrategy = require('passport-local').Strategy;
 
@@ -28,30 +38,27 @@ module.exports = function(passport, user) {
     },
 
     function(req, email, password, done) {
-
-      var generateHash = function(password) {
-        return bCrypt.hashSync(password, bCrypt.genSaltSync(8), null);
-      };
-
-      User.findOne({ where: { email: email } }).then(function(user) {
+      
+      User.findOne({
+        where: { email: email },
+        attributes: ['id', 'email', 'firstname', 'password'],
+      }).then(function(user) {
         if (user) {
           return done(null, false, { message : 'That email is already taken' });
         } else {
           var userPassword = generateHash(password);
           var data = {
             email: email,
-            password: userPassword/*,
-            firstname: req.body.firstname,
-            lastname: req.body.lastname*/
+            password: userPassword,
           };
 
           User.create(data).then(function(newUser, created) {
-            if (!newUser) {
-              return done(null, false);
-            }
-
             if (newUser) {
-              return done(null, newUser);
+              let userInfo = loggedInUser(newUser);
+              console.log("-->user created userInfo:", userInfo);
+              return done(null, userInfo);
+            } else {
+              return done(null, false);
             }
           });
         }
@@ -61,35 +68,36 @@ module.exports = function(passport, user) {
     
   //LOCAL SIGNIN
   passport.use('local-signin', new LocalStrategy(
-      {
-          // by default, local strategy uses username and password, we will override with email
-          usernameField : 'email',
-          passwordField : 'password',
-          passReqToCallback : true // allows us to pass back the entire request to the callback
-      },
+    {
+      // by default, local strategy uses username and password, we will override with email
+      usernameField : 'email',
+      passwordField : 'password',
+      passReqToCallback : true // allows us to pass back the entire request to the callback
+    },
 
-      function(req, email, password, done) {
-        var User = user;
-        var isValidPassword = function(userpass, password) {
-          return bCrypt.compareSync(password, userpass);
+    function(req, email, password, done) {
+      var User = user;
+
+      User.findOne({
+        where: { email: email },
+        attributes: ['id', 'email', 'firstname', 'password'],
+      }).then(function (user) {
+        if (!user) {
+          return done(null, false, { message: 'Email does not exist' });
         }
 
-        User.findOne({ where : { email: email } }).then(function (user) {
-          if (!user) {
-            return done(null, false, { message: 'Email does not exist' });
-          }
-
-          if (!isValidPassword(user.password,password)) {
-            return done(null, false, { message: 'Incorrect password.' });
-          }
-
-          var userinfo = user.get();
-          return done(null, userinfo);
-        }).catch(function(err) {
-          console.log("Error:", err);
-          return done(null, false, { message: 'Something went wrong with your Signin' });
-        });
-      }
+        if (!isValidPassword(user.password, password)) {
+          return done(null, false, { message: 'Incorrect password.' });
+        }
+          
+        var userInfo = loggedInUser(user);
+        console.log("-->user exist - signInOrUp userInfo:", userInfo);
+        return done(null, userInfo);
+      }).catch(function(err) {
+        console.log("Error:", err);
+        return done(null, false, { message: 'Something went wrong with your Signin' });
+      });
+    }
   ));
 
   //LOCAL SIGNIN or SIGNUP
@@ -103,49 +111,49 @@ module.exports = function(passport, user) {
 
     function (req, email, password, done) {
       var User = user;
-      var isValidPassword = function (userpass, password) {
-        //console.log("isValidPassword: userpass=", userpass, " password=", password);
-        //console.log("isValidPassword: userpass=", userpass, " hashSync=", bCrypt.hashSync(password, bCrypt.genSaltSync(8), null));
-        return bCrypt.compareSync(password, userpass);
-      }
-
-      var generateHash = function (password) {
-        return bCrypt.hashSync(password, bCrypt.genSaltSync(8), null);
-      };
-
-      User.findOne({ where: { email: email } }).then(function (user) {
+      
+      User.findOne({
+        where: { email: email },
+        attributes: ['id', 'email', 'firstname', 'password'],
+      }).then(function (user) {
         if (user) {
-          console.log("-->user exist");
+          //console.log("-->user exist:");
           if (!isValidPassword(user.password, password)) {
-            return done(null, false, { message: 'Incorrect password.' });
+            return done({ message: 'Incorrect password.' });
           }
 
-          var userinfo = user.get();
-          return done(null, userinfo);
+          var userInfo = loggedInUser(user);
+          console.log("-->user exist - signInOrUp userInfo:", userInfo);
+          return done(null, userInfo);
         } else {
-          console.log("-->user not exist");
+
+          //console.log("-->user not exist");
           var userPassword = generateHash(password);
           var data = {
             email: email,
             password: userPassword
           };
 
-          User.create(data).then(function (newUser, created) {
-            if (!newUser) {
-              return done(null, false);
-            }
-
+          User.create(data)
+          .then(function (newUser, created) {
             if (newUser) {
-              return done(null, newUser);
+              let userInfo = loggedInUser(newUser);
+              console.log("-->user created userInfo:", userInfo);
+              return done(null, userInfo);
+            } else {
+              return done({ message: 'Server error.' });
             }
+          })
+          .catch(function (err) {
+            console.log('User-create message: ', err.message);
+            return done({ message: err.errors[0].message });
           });
         }
       }).catch(function (err) {
         console.log("Error:", err);
-        return done(null, false, { message: 'Something went wrong with your Signin' });
+        return done({ message: 'Something went wrong with your Signin' });
       });
     }
   ));
 
 }
-

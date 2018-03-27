@@ -42,56 +42,50 @@ router.use(function (req, res, next) {
 });
 */
 router.get('/', function (req, res, next) {
-  console.log('-->user-get');
-  var user = {
-    displayName: 'Guest',
-    loggedIn: req.isAuthenticated()
-  };
-
-  if (req.isAuthenticated() && req.user) {
-    user.displayName = req.user.email.split('@')[0]
-    res.json({ user: user });
+  //console.log('-->user-get');
+  let result = {};
+  if (req.isAuthenticated()) {
+    result.user = loggedInUser(req.user)
   } else {
-    res.json({ user: user });
+    result.user = guestUser(req.user)
   }
+  res.json(result);
 });
 
 router.post('/login', function (req, res, next) {
-  console.log('-->user-login');
+  //console.log('-->user-login');
   passport.authenticate('local-signInOrUp', function (err, user, info) {
     if (err) {
       console.error('-->login err: ', err);
-      res.json({ success: false, message: err });
+      res.status(400).json({ success: false, message: err.message });
     } else if (user) {
       //console.log('login user: ', user);
       req.logIn(user, function (err) {
         if (err) {
-          console.error('-->login user error: ', err);
-          res.json({ success: false, message: err });
+          //console.error('-->login user error: ', err);
+          res.status(500).json({ success: false, message: err });
         } else {
           res.json({ success: true, user: user });
         }
       });
     } else if (!user) {
-      return res.redirect('/user-not-faund');
+      return res.status(500).json({ success: false, message: 'Server error' });
     }
   })(req, res, next);
 });
 
 router.post('/forgot', function (req, res, next) {
   const email = req.body.email;
-  console.log('-->forgot to email:', email);
-
   async.waterfall([
     function (done) {
-      console.log('-->1');
+      //console.log('-->1');
       crypto.randomBytes(16, function (err, buf) {
         var token = buf.toString('hex');
         done(err, token);
       });
     },
     function (token, done) {
-      console.log('-->2 token:', token);
+      //console.log('-->2 token:', token);
       User.findOne({
         attributes: publicFields,
         where: { email: email }
@@ -100,10 +94,10 @@ router.post('/forgot', function (req, res, next) {
           if (user) {
             user.reset_code = token;
             user.save().then(user => {
-              console.log('-->2 user token saved');
+              //console.log('-->2 user token saved');
               done(null, user);
             }).catch(error => {
-              console.log('-->2 user token catch:', error);
+              //console.log('-->2 user token catch:', error);
               done({ status: 500, message: 'Server error' });
             });
           } else {
@@ -112,18 +106,18 @@ router.post('/forgot', function (req, res, next) {
         })
     },
     function (user, done) {
-      console.log('-->3 sendEmail');
+      //console.log('-->3 sendEmail');
       mailer.sendEmail('forgot', user)
         .then(user => {
-          console.log('-->3 email sent');
+          //console.log('-->3 email sent');
           done(null, user);
         }).catch(error => {
-          console.log('-->3 sent email error:', error);
+          //console.log('-->3 sent email error:', error);
           done({ status: 500, message: 'Server error' });
         });
     }
   ], function (err) {
-    console.log('last callback err:', err);
+    //console.log('last callback err:', err);
     if (err) {
       res.status(err.status).json({ message: err.message });
     } else {
@@ -170,7 +164,7 @@ router.post('/reset', function (req, res, next) {
       } else {
         var userPassword = generateHash(password);
         user.password = userPassword;
-        //user.reset_code = null;
+        user.reset_code = null;
         user.save().then(updatedUser => {
           user = user.get({ plain: true })
           done(null, user);
@@ -184,7 +178,7 @@ router.post('/reset', function (req, res, next) {
       .then(result => {
         done(null, user);
       }).catch(error => {
-        console.log('-->reset sent email error:', error);
+        //console.log('-->reset sent email error:', error);
         done({ status: 500, message: 'Server error' });
       });
     }
@@ -192,7 +186,7 @@ router.post('/reset', function (req, res, next) {
     if (err) {
       res.status(err.status).json({ message: err.message });
     } else {
-      console.log('reset last callback user:', user);
+      //console.log('reset last callback user:', user);
       req.logIn(user, function (err) {
         err && console.error('-->reset login user error: ', err);
 

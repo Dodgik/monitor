@@ -10,15 +10,8 @@ import reducers from './reducers/index';
 import App from './app';
 import rootSaga from './sagas'
 
-/*
-Here we are getting the initial state injected by the server. See routes/index.js for more details
- */
-const initialState = window.__INITIAL_STATE__; // eslint-disable-line
-const user = window.user; // eslint-disable-line
 
-//console.warn('-->reducers: ', reducers)
-//console.warn('-->initialState: ', initialState)
-//const store = createStore(reducers, initialState);
+const initialState = window.__INITIAL_STATE__; // eslint-disable-line
 
 const sagaMiddleware = createSagaMiddleware();
 const store = {
@@ -28,15 +21,13 @@ const store = {
 store.runSaga(rootSaga);
 window.store = store;
 
-/*
-While creating a store, we will inject the initial state we received from the server to our app.
- */
+
 const render = (Component) => {
   ReactDOM.render(
     <AppContainer>
       <Provider store={store}>
         <BrowserRouter>
-          <Component user={user}/>
+          <Component/>
         </BrowserRouter>
       </Provider>
     </AppContainer>,

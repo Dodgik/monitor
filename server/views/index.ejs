@@ -25,14 +25,9 @@
 </head>
 
 <body>
-  <div id="body-wrap">
-    <%- html %>
-  </div>
+  <div id="body-wrap"></div>
   <script>
-    window.__INITIAL_STATE__ = <%- script %>
-  </script>
-  <script>
-    window.user = <%- user %>
+    window.__INITIAL_STATE__ = <%- state %>
   </script>
   <script>
     window.app = {};

@@ -23,6 +23,7 @@ class Login extends Component {
     this.setState({ password: e.target.value });
   }
   handleLogin() {
+    /*
     console.log("EMail: " + this.state.email);
     console.log("Password: " + this.state.password);
     let apiHost = app.apiHost || '/'
@@ -38,6 +39,14 @@ class Login extends Component {
         console.error(error);
         this.setState({ loginError: error.message });
       });
+    */
+    const email = this.refs.email.value;
+    const password = this.refs.password.value;
+
+    this.props.loginSend({
+      email: email,
+      password: password,
+    });
   }
 
   handleForgotEmailChange(e) {
@@ -46,21 +55,6 @@ class Login extends Component {
   handleForgot() {
     console.log('ForgotEMail: ' + this.state.forgotEmail);
     this.props.sendForgot({ email: this.state.forgotEmail });
-    /*
-    let apiHost = app.apiHost || '/'
-    axios.post(`${apiHost}forgot`, { email: this.state.forgotEmail },
-      { headers: { 'X-Requested-With': 'XMLHttpRequest' } })
-      .then(function (response) {
-        let res = error.response.data;
-        console.log(res);
-        //window.location.reload()
-      })
-      .catch(function (error) {
-        let err = error.response.data;
-        console.error(err);
-        this.setState({ forgotError: err.message });
-      });
-    */
   }
   toggleForgot(e) {
     e.preventDefault();
@@ -98,21 +92,21 @@ class Login extends Component {
                 <button type="submit" className="btn btn-secondary btn-block" onClick={this.toggleForgot.bind(this)}>Close</button>
               </div>
             ) : (
-                <div>
-                  <div className="mb-2">Please enter your new password</div>
-                  <div className="mb-2">
-                    <input className="form-control mb-2" name="password" type="password" placeholder="New password" ref="newPassword" />
-                    <input className="form-control" name="password_confirm" type="password" placeholder="Confirm Password" ref="newPasswordConfirm" />
-                  </div>
-                  {this.props.sending ? (<div className="mt-2 text-warning text-center">Sending...</div>) : (
-                    <div className="btn-block text-left clearfix">
-                      <button type="submit" className="btn btn-primary" onClick={this.handleReset.bind(this)}>Save</button>
-                      <Link to="/" className="btn btn-secondary float-right" onClick={this.handleCloseReset.bind(this)}>Cancel</Link>
-                    </div>
-                  )}
-                  {this.props.error ? (<div className="text-danger rounded p-0 mt-2 bg-white">{this.props.error}</div>) : (<div className="mb-2 mt-2"></div>)}
+              <div>
+                <div className="mb-2">Please enter your new password</div>
+                <div className="mb-2">
+                  <input className="form-control mb-2" name="password" type="password" placeholder="New password" ref="newPassword" />
+                  <input className="form-control" name="password_confirm" type="password" placeholder="Confirm Password" ref="newPasswordConfirm" />
                 </div>
-              )}
+                {this.props.sending ? (<div className="mt-2 text-warning text-center">Sending...</div>) : (
+                  <div className="btn-block text-left clearfix">
+                    <button type="submit" className="btn btn-primary" onClick={this.handleReset.bind(this)}>Save</button>
+                    <Link to="/" className="btn btn-secondary float-right" onClick={this.handleCloseReset.bind(this)}>Cancel</Link>
+                  </div>
+                )}
+                {this.props.error ? (<div className="text-danger rounded p-0 mt-2 bg-white">{this.props.error}</div>) : (<div className="mb-2 mt-2"></div>)}
+              </div>
+            )}
           </div>
         </div>
       ) : (
@@ -120,27 +114,31 @@ class Login extends Component {
           {!this.state.showForgot ? (
             <div method="post" action="login">
               <div className="mb-2">
-                <input className="form-control" name="email" type="text" placeholder="Email" onChange={this.handleEmailChange.bind(this)} />
+                <input className="form-control" type="text" placeholder="Email" ref="email" />
               </div>
               <div className="mb-2">
-                <input className="form-control" name="password" type="password" placeholder="Password" onChange={this.handlePasswordChange.bind(this)} />
+                <input className="form-control" type="password" placeholder="Password" ref="password" />
               </div>
-              <div className="mb-2 text-warning">{this.state.loginError}</div>
-              <button type="submit" className="btn btn-primary btn-block" onClick={this.handleLogin.bind(this)}>Log In / Sign Up</button>
-              <a className="text-center text-dark" href="#" onClick={this.toggleForgot.bind(this)}><u>Forgot account?</u></a>
+              {this.props.error ? (<div className="text-danger rounded p-0 mb-2 mt-2 bg-white">{this.props.error}</div>) : (<div className="mb-2 mt-2"></div>)}
+              {this.props.sending ? (<div className="mt-2 text-warning text-center">Sending...</div>) : (
+                <div className="btn-block text-center clearfix">
+                  <button type="submit" className="btn btn-primary btn-block" onClick={this.handleLogin.bind(this)}>Log In / Sign Up</button>
+                  <a className="text-center text-dark" href="#" onClick={this.toggleForgot.bind(this)}><u>Forgot account?</u></a>
+                </div>
+              )}
             </div>
           ) : (
             <div method="post" action="forgot">
               {this.props.message ? (
                 <div>
-                    <div className="bg-white rounded p-2 mb-2 font-weight-bold text-center text-success">{this.props.message}</div>
-                    <button type="submit" className="btn btn-secondary btn-block" onClick={this.toggleForgot.bind(this)}>Close</button>
+                  <div className="bg-white rounded p-2 mb-2 font-weight-bold text-center text-success">{this.props.message}</div>
+                  <button type="submit" className="btn btn-secondary btn-block" onClick={this.toggleForgot.bind(this)}>Close</button>
                 </div>
               ) : (
                 <div>
                   <div className="mb-2">Please enter your email</div>
                   <div className="mb-2">
-                      <input className="form-control" name="email" type="text" placeholder="Email" onChange={this.handleForgotEmailChange.bind(this)} />
+                    <input className="form-control" name="email" type="text" placeholder="Email" onChange={this.handleForgotEmailChange.bind(this)} />
                   </div>
                   {this.props.sending ? (<div className="mt-2 text-warning text-center">Sending...</div>) : (
                     <div className="btn-block text-left clearfix">
@@ -169,6 +167,9 @@ const mapStateToProps = state => ({
 });
 
 const mapDispatchToProps = dispatch => ({
+  loginSend: (user) => {
+    dispatch(userActions.loginSend(user));
+  },
   openForgot: () => {
     dispatch(userActions.forgotOpen());
   },

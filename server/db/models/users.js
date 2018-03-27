@@ -12,7 +12,10 @@ const User = dbSession.define('user', {
   email: {
     type: Sequelize.STRING,
     allowNull: false,
-    unique: true
+    unique: true,
+    validate: {
+      isEmail: { msg: 'Email must be a valid email address' },
+    },
   },
   password: {
     type: Sequelize.STRING,

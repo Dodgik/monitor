@@ -25,16 +25,16 @@
 </head>
 
 <body>
-  <div id="body-wrap">
-  </div>
+  <div id="body-wrap"></div>
   <script>
-    //window.__INITIAL_STATE__ = { items: null, itemPreview: null, itemView: null };
+	window.__INITIAL_STATE__ = {
+		user: {
+			displayName: 'Guest',
+			loggedIn: false
+		}
+	};
   </script>
   <script>
-    window.user = {
-	  displayName: 'Guest',
-	  loggedIn: false
-	};
     window.app = {
 	  apiHost: 'http://localhost:3000/'
 	};

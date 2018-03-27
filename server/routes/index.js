@@ -43,7 +43,7 @@ app.use(function (req, res, next) {
 app.post('/login', function (req, res, next) {
   passport.authenticate('local-signInOrUp', function (err, user, info) {
     if (err) {
-      //console.log('login err: ', err);
+      console.log('login err: ', err);
       if (req.xhr) {
         //console.log('login is xhr');
         res.json({ success: false, message: err });
@@ -52,7 +52,7 @@ app.post('/login', function (req, res, next) {
         return next(err);
       }
     } else if (user) {
-      //console.log('login user: ', user);
+      console.log('login user: ', user);
       req.logIn(user, function (err) {
         if (err) {
           //console.log('login user error: ', err);
