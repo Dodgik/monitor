@@ -101,8 +101,8 @@ class Login extends Component {
                 <div>
                   <div className="mb-2">Please enter your new password</div>
                   <div className="mb-2">
-                    <input className="form-control mb-2" name="password" type="password" placeholder="Password" ref="newPassword" />
-                    <input className="form-control" name="password_confirm" type="password" placeholder="Same Password" ref="newPasswordConfirm" />
+                    <input className="form-control mb-2" name="password" type="password" placeholder="New password" ref="newPassword" />
+                    <input className="form-control" name="password_confirm" type="password" placeholder="Confirm Password" ref="newPasswordConfirm" />
                   </div>
                   {this.props.sending ? (<div className="mt-2 text-warning text-center">Sending...</div>) : (
                     <div className="btn-block text-left clearfix">
@@ -161,6 +161,7 @@ class Login extends Component {
 }
 
 const mapStateToProps = state => ({
+  loggedIn: state.user.loggedIn,
   sending: state.user.sending,
   message: state.user.message,
   error: state.user.error,

@@ -11,6 +11,8 @@ var async = require('async');
 var crypto = require('crypto');
 const bCrypt = require('bcrypt-nodejs');
 
+const { publicFields, guestUser, loggedInUser } = require('../lib/user_helper');
+
 
 const app = express();
 
@@ -70,7 +72,7 @@ router.post('/login', function (req, res, next) {
           res.json({ success: true, user: user });
         }
       });
-    } else if (user) {
+    } else if (!user) {
       return res.redirect('/user-not-faund');
     }
   })(req, res, next);
@@ -91,7 +93,7 @@ router.post('/forgot', function (req, res, next) {
     function (token, done) {
       console.log('-->2 token:', token);
       User.findOne({
-        attributes: ['id', 'email'],
+        attributes: publicFields,
         where: { email: email }
       })
         .then(user => {
@@ -136,51 +138,72 @@ var generateHash = function (password) {
 };
 
 router.post('/reset', function (req, res, next) {
-  const password = req.body.password;
-  const token = req.body.token;
-  console.log('-->reset to pass:', password);
+  const { password, passwordConfirm, token } = req.body;
 
   async.waterfall([
     function (done) {
-      console.log('-->1 token:', token);
+      if (!password || password.length < 6) {
+        done({ status: 400, message: 'Password must contain at least six characters!' });
+      } else if (password != passwordConfirm) {
+        done({ status: 400, message: 'Please check that you have entered and confirmed your password' });
+      } else if (!token) {
+        done({ status: 400, message: 'Invalid reset code' });
+      }
+      done(null, token, password);
+    },
+    function (token, password, done) {
       User.findOne({
-        attributes: ['id', 'email'],
+        attributes: publicFields,
         where: { reset_code: token }
       })
-        .then(user => {
-          if (user) {
-            var userPassword = generateHash(password);
-            user.password = userPassword;
-            user.reset_code = null;
-            user.save().then(user => {
-              console.log('-->2 user token saved');
-              done(null, user);
-            }).catch(error => {
-              console.log('-->2 user token catch:', error);
-              done({ status: 500, message: 'Server error' });
-            });
-          } else {
-            done({ status: 400, message: 'User not found' });
-          }
-        })
+      .then(user => {
+        if (user) {
+          done(null, user, password);
+        } else {
+          done({ status: 400, message: 'Invalid reset code' });
+        }
+      })
     },
-    function (user, done) {
-      console.log('-->3 sendEmail');
-      mailer.sendEmail('reset', user)
-        .then(user => {
-          console.log('-->3 email sent');
+    function (user, password, done) {
+      if (password == user.email) {
+        done({ status: 400, message: 'Password must be different from Username!' });
+      } else {
+        var userPassword = generateHash(password);
+        user.password = userPassword;
+        //user.reset_code = null;
+        user.save().then(updatedUser => {
+          user = user.get({ plain: true })
           done(null, user);
         }).catch(error => {
-          console.log('-->3 sent email error:', error);
           done({ status: 500, message: 'Server error' });
         });
+      }
+    },
+    function (user, done) {
+      mailer.sendEmail('reset', user)
+      .then(result => {
+        done(null, user);
+      }).catch(error => {
+        console.log('-->reset sent email error:', error);
+        done({ status: 500, message: 'Server error' });
+      });
     }
-  ], function (err) {
-    console.log('last callback err:', err);
+  ], function (err, user) {
     if (err) {
       res.status(err.status).json({ message: err.message });
     } else {
-      res.json({ message: 'Recovery email was sent' });
+      console.log('reset last callback user:', user);
+      req.logIn(user, function (err) {
+        err && console.error('-->reset login user error: ', err);
+
+        let data = { message: 'Recovery email was sent' };
+        if (req.isAuthenticated()) {
+          data.user = loggedInUser(user);
+        } else {
+          data.user = guestUser(user);
+        }
+        res.json(data);
+      });
     }
   });
 });

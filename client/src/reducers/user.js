@@ -18,7 +18,6 @@ export default (state = user, action) => {
       return { ...state, loggedIn: false };
 
       
-
     case user_actions.FORGOT_OPEN:
       return {
         ...state,
@@ -43,6 +42,7 @@ export default (state = user, action) => {
         error: action.error.message,
       }
 
+
     case user_actions.RESET_CLOSE:
       return {
         ...state,
@@ -58,6 +58,7 @@ export default (state = user, action) => {
     case user_actions.RESET_DONE:
       return {
         ...state,
+        ...action.user.user,
         sending: false,
         message: action.user.message,
       }

@@ -16,7 +16,6 @@ export const RESET_FAIL = 'RESET_FAIL'
 
 export const userGet = () => ({ type: USER_GET })
 
-
 export const forgotOpen = (user) => ({ type: FORGOT_OPEN, user })
 export const forgot = (user) => ({ type: FORGOT_SEND, user })
 export const forgotRequest = (user) => ({ type: FORGOT_REQUEST, user })

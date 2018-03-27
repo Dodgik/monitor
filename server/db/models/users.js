@@ -26,6 +26,21 @@ const User = dbSession.define('user', {
 
   last_login: { type: Sequelize.DATE },
   status: { type: Sequelize.ENUM('active', 'inactive'), defaultValue: 'active' }
+}, {
+  getterMethods: {
+    displayName() {
+      if (this.firstname) {
+        return this.firstname;
+      } else if (this.username) {
+        return this.username;
+      } else {
+        return this.email.split('@')[0];
+      }
+    },
+    fullName() {
+      return this.firstname && this.lastname ? this.firstname + ' ' + this.lastname : '';
+    }
+  },
 });
 
 module.exports = User

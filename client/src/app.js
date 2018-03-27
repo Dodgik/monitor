@@ -34,7 +34,7 @@ class App extends Component {
     return (
       <div className="app-root">
         <div className="panel">
-          <Header displayName={this.state.user.displayName} />
+          <Header />
           <LoginPanel {...this.state} />
           {/*<ListItems {...this.props} />*/}
           <Menu />
@@ -57,16 +57,11 @@ class App extends Component {
 
 App.propTypes = propTypes;
 App.defaultProps = defaultProps;
-
+/*
 const mapStateToProps = state => ({
-  active: state.list.active,
-  items: state.list.items,
-});
-const mapDispatchToProps = dispatch => ({
-  viewItem: (name) => {
-    dispatch(viewItem(name));
-  },
+  displayName: state.user.displayName,
 });
 
-//export default connect(mapStateToProps, mapDispatchToProps)(App);
+export default connect(mapStateToProps)(App);
+*/
 export default App;
