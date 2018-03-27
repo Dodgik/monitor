@@ -1,9 +1,7 @@
 const Email = require('email-templates');
 const nodemailer = require('nodemailer');
 
-var path = require('path');
-const env = process.env.NODE_ENV || 'development';
-const config = require('../config/config.js')[env];
+const config = require('../config/config.js');
 
 
 const sendEmail = function(template, user) {
@@ -15,7 +13,8 @@ const sendEmail = function(template, user) {
     views: { root: tplsPath },
     message: { from: config.mail_sender },
     // uncomment below to send emails in development/test env:
-    //send: true,
+    open: false,
+    send: true,
     transport: nodemailer.createTransport({
       service: 'gmail',
       auth: {

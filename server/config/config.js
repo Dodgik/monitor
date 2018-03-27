@@ -1,40 +1,25 @@
-module.exports = {
-  "development": {
-    "protocol": "http",
-    "host": "localhost:3000",
+const env = process.env.NODE_ENV || 'development';
+const configJson = require('./config.json');
 
-    "database": {
-      "username": "sa",
-      "password": "avas",
-      "database": "monitor",
-      "host": "127.0.0.1",
-      "dialect": "mssql",
-      "dialectOptions": {
-        "instanceName": "SYMBIOSIS2"
-      }
-    },
+let defaultConfig = {
+  "protocol": "http",
+  "host": "localhost:3000",
 
-    "mail_sender": "vasiliy017@gmail.com",
-    "mail_user": "vasiliy017@gmail.com",
-    "mail_password": "",
+  "database": {
+    "username": "sa",
+    "password": "avas",
+    "database": "monitor",
+    "host": "127.0.0.1",
+    "dialect": "mssql",
   },
-  "production": {
-    "protocol": "http",
-    "host": "localhost:3000",
 
-    "database": {
-      "username": "sa",
-      "password": "avas",
-      "database": "monitor",
-      "host": "127.0.0.1",
-      "dialect": "mssql",
-      "dialectOptions": {
-        "instanceName": "SYMBIOSIS2"
-      }
-    },
-
-    "mail_sender": "vasiliy017@gmail.com",
-    "mail_user": "vasiliy017@gmail.com",
-    "mail_password": "",
-  }
+  "mail_sender": "vasiliy017@gmail.com",
+  "mail_user": "vasiliy017@gmail.com",
+  "mail_password": "",
 }
+
+for (let key in configJson) {
+  defaultConfig[key] = configJson[key]
+}
+
+module.exports = defaultConfig;
