@@ -40,42 +40,7 @@ app.use(function (req, res, next) {
   res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
   next();
 });
-app.post('/login', function (req, res, next) {
-  passport.authenticate('local-signInOrUp', function (err, user, info) {
-    if (err) {
-      console.log('login err: ', err);
-      if (req.xhr) {
-        //console.log('login is xhr');
-        res.json({ success: false, message: err });
-      } else {
-        //console.log('login is not xhr');
-        return next(err);
-      }
-    } else if (user) {
-      console.log('login user: ', user);
-      req.logIn(user, function (err) {
-        if (err) {
-          //console.log('login user error: ', err);
-          if (req.xhr) {
-            res.json({ success: false, message: err });
-          } else {
-            return next(err);
-          }
-        } else {
-          if (req.xhr) {
-            //console.log('login user is xhr');
-            res.json({ success: true });
-          } else {
-            //console.log('login user is not xhr');
-            return res.redirect('/');
-          }
-        }
-      });
-    } else if (user) {
-      return res.redirect('/user-not-faund');
-    }
-  })(req, res, next);
-});
+
 
 app.get('/logout', function (req, res) {
   //console.log('logging out');
@@ -83,59 +48,6 @@ app.get('/logout', function (req, res) {
   res.redirect('/');
 });
 
-app.post('/forgot', function (req, res, next) {
-  const email = req.body.email;
-  console.log('forgot to email:', email);
-
-  async.waterfall([
-    function(done) {
-      console.log('-->1');
-      crypto.randomBytes(17, function(err, buf) {
-        var token = buf.toString('hex');
-        done(err, token);
-      });
-    },
-    function(token, done) {
-      console.log('-->2 token:', token);
-      User.findOne({
-        attributes: ['id', 'email'],
-        where: { email: email }
-      })
-      .then(user => {
-        if (user) {
-          user.reset_code = token;
-          user.save().then(user => {
-            console.log('-->2 user token saved');
-            done(null, user);
-          }).catch(error => {
-            console.log('-->2 user token catch:', error);
-            done({ status: 500, message: 'Server error' });
-          });
-        } else {
-          done({ status: 400, message: 'User not found' });
-        }
-      })
-    },
-    function(user, done) {
-      console.log('-->3 sendEmail');
-      mailer.sendEmail('forgot', user)
-      .then(user => {
-        console.log('-->3 email sent');
-        done(null, user);
-      }).catch(error => {
-        console.log('-->3 sent email error:', error);
-        done({ status: 500, message: 'Server error' });
-      });
-    }
-  ], function(err) {
-    console.log('last callback err:', err);
-    if (err) {
-      res.status(err.status).json({ message: err.message });
-    } else {
-      res.json({ message: 'Recovery email was sent' });
-    }
-  });
-});
 
 function ensureAuthenticated(req, res, next) {
   if (req.isAuthenticated()) {

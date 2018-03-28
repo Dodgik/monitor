@@ -8,7 +8,7 @@ class Account extends Component {
   render() {
     return (
       <div className="view_item devices">
-        <h2>Account:</h2>
+        <h2 className="text-center mt-2">coming soon</h2>
         <p>...</p>
       </div>
     );

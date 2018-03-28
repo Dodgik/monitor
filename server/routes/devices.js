@@ -32,11 +32,14 @@ router.use(function (req, res, next) {
 });
 
 router.get('/', function (req, res, next) {
-  console.log('devices req.body: ', req.body);
-  let user_id = 1;
-  if (req.isAuthenticated() && req.user) {
-    user_id = req.user.id
+  console.log('devices req.user: ', req.user);
+  console.log('devices req.isAuthenticated: ', req.isAuthenticated());
+  if (!req.isAuthenticated() || !req.user) {
+    return res.status(401).json({ message: 'Unauthorized' });
   }
+
+  //const user_id = 1;
+  const user_id = req.user.id;
 
   Device.findAll({
     attributes: ['id', 'name', 'latitude', 'longitude'],
@@ -47,17 +50,18 @@ router.get('/', function (req, res, next) {
 });
 
 router.post('/add', function (req, res, next) {
-  //console.log('devices-add: ', req.body);
-  let user_id = 1;
-  if (req.isAuthenticated() && req.user) {
-    user_id = req.user.id
+  //console.log('devices-add: ', req.body);  
+  if (!req.isAuthenticated() || !req.user) {
+    return res.status(401).json({ message: 'Unauthorized' });
   }
+
+  //const user_id = 1;
+  const user_id = req.user.id;
   const name = req.body.name;
   const device = {
     name: name,
     user_id: user_id
   }
-  //device.id = Math.floor(Math.random() * (1000 - 4 + 1)) + 4;
 
   dbSession.transaction(function (t) {
     return Device.create(device, { transaction: t });
@@ -71,11 +75,13 @@ router.post('/add', function (req, res, next) {
 });
 
 router.post('/set', function (req, res, next) {
-  console.log('devices-set: ', req.body);
-  let user_id = 1;
-  if (req.isAuthenticated() && req.user) {
-    user_id = req.user.id
+  //console.log('devices-set: ', req.body);
+  if (!req.isAuthenticated() || !req.user) {
+    return res.status(401).json({ message: 'Unauthorized' });
   }
+
+  //const user_id = 1;
+  const user_id = req.user.id;
   const id = req.body.id;
   const name = req.body.name;
   const device = {
@@ -104,11 +110,12 @@ router.post('/set', function (req, res, next) {
 
 router.post('/remove', function (req, res, next) {
   //console.log('devices-remove: ', req.body.id);
-  //res.json({ id: req.body.id });
-  let user_id = 1;
-  if (req.isAuthenticated() && req.user) {
-    user_id = req.user.id
+  if (!req.isAuthenticated() || !req.user) {
+    return res.status(401).json({ message: 'Unauthorized' });
   }
+
+  //const user_id = 1;
+  const user_id = req.user.id;
   const id = req.body.id;
   dbSession.transaction(function (t) {
     return Device.destroy({
@@ -127,10 +134,12 @@ router.post('/remove', function (req, res, next) {
 
 router.post('/pos', function (req, res, next) {
   //console.log('devices-pos: ', req.body);
-  let user_id = 1;
-  if (req.isAuthenticated() && req.user) {
-    user_id = req.user.id
+  if (!req.isAuthenticated() || !req.user) {
+    return res.status(401).json({ message: 'Unauthorized' });
   }
+
+  //const user_id = 1;
+  const user_id = req.user.id;
   const id = req.body.id;
   const latitude = req.body.latitude;
   const longitude = req.body.longitude;

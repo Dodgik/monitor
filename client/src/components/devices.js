@@ -12,7 +12,9 @@ class Devices extends Component {
       showAddForm: false,
       timer: null,
     }
-    this.startTimer();
+    if (props.loggedIn) {
+      this.startTimer();
+    }
   }
 
   startTimer() {
@@ -28,7 +30,7 @@ class Devices extends Component {
     clearInterval(this.state.timer);
   }
   componentWillUnmount() {
-    clearInterval(this.state.timer);
+    this.stopTimer();
   }
 
   componentWillReceiveProps(nextProps) {
@@ -41,6 +43,12 @@ class Devices extends Component {
       }
       console.log('---Devices.componentWillReceiveProps setState:', state)
       this.setState(state);
+    }
+    if (nextProps.loggedIn != this.props.loggedIn) {
+      this.props.fetchDevices();
+    }
+    if (nextProps.loggedIn) {
+      this.startTimer();
     }
   }
   
@@ -58,6 +66,9 @@ class Devices extends Component {
     return (
       <div className="devices">
         <ul className="list-group list-group-item-action">
+          {!this.props.loggedIn && (
+            <li className="list-group-item list-group-item-dark text-center text-danger">You must sign up to access this functionality</li>
+          )}
           {this.props.list.map(device => <Device key={device.id} {...device} />)}
 
           { this.state.showAddForm ? (
@@ -86,6 +97,7 @@ class Devices extends Component {
 
 
 const mapStateToProps = state => ({
+  loggedIn: state.user.loggedIn,
   list: state.devices.list,
   actionDevice: state.devices.actionDevice,
 });

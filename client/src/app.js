@@ -34,7 +34,8 @@ class App extends Component {
           {/*<Route exact path="/view/:name" component={ItemView} />*/}
           {/*<Route exact path='*' component={NotFound} />*/}
         </div>
-        {/*<Map id="map"/>*/}
+        {/**/}
+        <Map id="map"/>
       </div>
     );
   }

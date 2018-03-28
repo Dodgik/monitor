@@ -5,6 +5,7 @@ module.exports.publicFields = publicFields;
 const loggedInUser = function (user) {
   let userInfo = {
     loggedIn: true,
+    isFirstLogin: false,
     id: user.id,
     email: user.email,
     displayName: user.displayName,

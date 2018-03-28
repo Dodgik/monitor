@@ -2,12 +2,12 @@ import fetch from 'isomorphic-fetch'
 
 const getProps = {
   method: 'GET',
-  /*credentials: 'include',*/
+  credentials: 'include',
 };
 const postProps = {
   method: 'POST',
   headers: { 'Content-Type': 'application/json' },
-  /*credentials: 'include',*/
+  credentials: 'include',
 };
 
 const fetchWrap = (path, props = postProps, data) => {

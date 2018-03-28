@@ -23,7 +23,8 @@ module.exports = function(passport, user) {
   passport.deserializeUser(function(id, done) {
     User.findById(id).then(function(user) {
       if (user) {
-        done(null, user.get());
+        let userInfo = loggedInUser(user);
+        done(null, userInfo);
       } else {
         done(user.errors, null);
       }
@@ -138,6 +139,7 @@ module.exports = function(passport, user) {
           .then(function (newUser, created) {
             if (newUser) {
               let userInfo = loggedInUser(newUser);
+              userInfo.isFirstLogin = true;
               console.log("-->user created userInfo:", userInfo);
               return done(null, userInfo);
             } else {

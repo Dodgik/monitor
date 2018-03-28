@@ -1,27 +1,22 @@
 const Email = require('email-templates');
-const nodemailer = require('nodemailer');
-
 const config = require('../config/config.js');
 
 
 const sendEmail = function(template, user) {
-  //console.log('forgot tpls:', tpls);
-
   const tplsPath = 'templates/emails';
 
   const email = new Email({
     views: { root: tplsPath },
     message: { from: config.mail_sender },
-    // uncomment below to send emails in development/test env:
-    open: false,
+    preview: false,
     send: true,
-    transport: nodemailer.createTransport({
+    transport: {
       service: 'gmail',
       auth: {
         user: config.mail_user,
         pass: config.mail_password
       }
-    }),
+    },
     juiceResources: {
       webResources: {
         relativeTo: tplsPath
@@ -37,13 +32,10 @@ const sendEmail = function(template, user) {
       recoveryUrl: recoveryUrl,
   };
 
-
   return email
     .send({
       template: template,
-      message: {
-        to: user.email
-      },
+      message: { to: user.email },
       locals: locals
     })
     /*
