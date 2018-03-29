@@ -17,10 +17,20 @@ const devices = {
 
 export default (state = devices, action) => {
   switch (action.type) {
-
+    
     case actions.SET_CURRENT_DEVICE:
       state.currentDeviceId = action.device.id;
       cookie.save('current_device', action.device.id, { path: '/' })
+      return { ...state }
+
+    case actions.RECEIVE_CURRENT_POSITION:
+      if (state.currentDeviceId) {
+        state.list = state.list.map(function (device) {
+          return device.id == state.currentDeviceId ? { ...device, ...action.coords } : device;
+        });
+        let currentDevice = { id: state.currentDeviceId, ...action.coords }
+        dispatch(actions.requestSetDevicePosition(currentDevice));
+      }
       return { ...state }
 
     case actions.SET_FOCUS_DEVICE:

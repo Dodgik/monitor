@@ -136,6 +136,8 @@ class Map extends React.PureComponent {
   componentDidMount() {
     console.log('---Map.componentDidMount:', this.props)
     //this.updateCurrentPosition()
+
+    /*
     this.getCurrentPosition().then(position => {
       console.log('---setDefaultCunter in getCurrentPosition:', position.coords)
       this.setCenter(position.coords)
@@ -150,8 +152,8 @@ class Map extends React.PureComponent {
           this.props.setDevicePosition(device)
       }
       */
-    })
-    this.subscribeWatchPosition();
+    //})
+    //this.subscribeWatchPosition();
   }
 
   componentWillReceiveProps(nextProps) {
@@ -187,6 +189,7 @@ class Map extends React.PureComponent {
 
   updateCurrentPosition = () => {
     if (this.props.currentDeviceId) {
+      /*
       this.getCurrentPosition().then(pos => {
         let device = {
           id: this.props.currentDeviceId,
@@ -196,6 +199,7 @@ class Map extends React.PureComponent {
         console.log('---updateCurrentPosition:', device)
         this.props.setDevicePosition(device)
       })
+      */
     }
   }
 

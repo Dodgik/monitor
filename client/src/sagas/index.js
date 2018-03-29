@@ -7,6 +7,7 @@ import { selectedRedditSelector, devicesListSelector } from '../reducers/selecto
 import api from '../api'
 import deviceSaga from './devices'
 import userSaga from './user'
+import geolocationSaga from './geolocation'
 
 
 export function* invalidateReddit() {
@@ -39,4 +40,5 @@ export default function* root() {
   
   yield fork(userSaga)
   yield fork(deviceSaga)
+  yield fork(geolocationSaga)
 }
