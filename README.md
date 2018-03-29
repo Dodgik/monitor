@@ -35,8 +35,10 @@ npm i --save redux-saga isomorphic-fetch
 npm i --save react-cookies
 
 npm i --save email-templates pug
-npm i --save nodemailer
 npm i --save async crypto
 
+npm i --save ini
+
+npm i --save intel
 
 npx run server\db\build.js

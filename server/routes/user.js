@@ -1,3 +1,4 @@
+var intel = require('intel');
 var express = require('express');
 
 var passport = require('passport')
@@ -93,11 +94,13 @@ router.post('/forgot', function (req, res, next) {
         .then(user => {
           if (user) {
             user.reset_code = token;
-            user.save().then(user => {
+            user.save().then(updatedUser => {
               //console.log('-->2 user token saved');
+              user = user.get({ plain: true })
               done(null, user);
             }).catch(error => {
               //console.log('-->2 user token catch:', error);
+              intel.error(error)
               done({ status: 500, message: 'Server error' });
             });
           } else {
@@ -113,6 +116,7 @@ router.post('/forgot', function (req, res, next) {
           done(null, user);
         }).catch(error => {
           //console.log('-->3 sent email error:', error);
+          intel.error(error)
           done({ status: 500, message: 'Server error' });
         });
     }

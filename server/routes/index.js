@@ -1,3 +1,8 @@
+var intel = require('intel');
+intel.basicConfig({
+  'file': 'error.log',
+  'format': '[%(date)s] %(name)s.%(levelname)s: %(message)s',
+});
 var express = require('express');
 var path = require('path');
 var passport = require('passport')
