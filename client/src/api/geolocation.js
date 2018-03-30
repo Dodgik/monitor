@@ -41,7 +41,6 @@ var watchOptions = {
 };
 
 var watchID = null;
-/*
 export const subscribeWatchPosition = (callback) => {
   console.log('---api subscribeWatchPosition')
   if (navigator.geolocation) {
@@ -61,26 +60,32 @@ export const subscribeWatchPosition = (callback) => {
   }
   return watchID
 }
+
 export const unsubscribeWatchPosition = (watchID) => {
     navigator.geolocation.clearWatch(watchID);
 }
-*/
+
+/*
 export const subscribeWatchPosition = (callback) => {
   console.log('---api subscribeWatchPosition')
   return setInterval(function (err) {
       let coords = {
-        latitude: 10,
-        longitude: 11
+        latitude: 12,
+        longitude: 13
       }
       console.warn('---api subscribeWatchPosition result:', coords)
       //throw coords 
       callback(coords)
-    }, 5000);
+    }, 10000);
 }
 export const unsubscribeWatchPosition = (watchID) => {
     clearInterval(watchID);
 }
+*/
 
+
+
+/*
 export const watchPosition = () => {
   console.log('---api watchPosition')
   let deferred
@@ -109,3 +114,4 @@ export const watchPosition = () => {
   }
   return deferred.promise
 }
+*/

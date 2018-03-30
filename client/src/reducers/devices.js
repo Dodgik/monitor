@@ -1,5 +1,3 @@
-import { DEVICES_ACTIONS } from '../consts/action_types';
-import { LISTS } from '../consts/default_state';
 import * as actions from '../actions/devices_actions'
 import cookie from 'react-cookies'
 
@@ -21,16 +19,6 @@ export default (state = devices, action) => {
     case actions.SET_CURRENT_DEVICE:
       state.currentDeviceId = action.device.id;
       cookie.save('current_device', action.device.id, { path: '/' })
-      return { ...state }
-
-    case actions.RECEIVE_CURRENT_POSITION:
-      if (state.currentDeviceId) {
-        state.list = state.list.map(function (device) {
-          return device.id == state.currentDeviceId ? { ...device, ...action.coords } : device;
-        });
-        let currentDevice = { id: state.currentDeviceId, ...action.coords }
-        dispatch(actions.requestSetDevicePosition(currentDevice));
-      }
       return { ...state }
 
     case actions.SET_FOCUS_DEVICE:
@@ -123,20 +111,6 @@ export default (state = devices, action) => {
     case actions.DEVICE_EDIT_POSITION_FAIL:
       return { ...state, errorSetPosition: action.error }
 
-
-
-
-
-
-    case DEVICES_ACTIONS.ITEM_ADD:
-      action.item.id = Math.floor(Math.random() * (1000 - 4 + 1)) + 4;
-      state.list.push(action.item);
-      return { ...state };
-    case DEVICES_ACTIONS.ITEM_REMOVE:
-      state.list = state.list.filter(function (item) {
-        return item.id != action.id;
-      });
-      return { ...state };
 
 
     default:

@@ -7,7 +7,7 @@ const User = dbSession.define('user', {
     type: Sequelize.INTEGER,
     primaryKey: true,
     allowNull: false,
-    unique: true
+    unique: true,
   },
   email: {
     type: Sequelize.STRING,
@@ -19,7 +19,13 @@ const User = dbSession.define('user', {
   },
   password: {
     type: Sequelize.STRING,
-    allowNull: false
+    allowNull: false,
+    validate: {
+      len: {
+        args: 6,
+        msg: "Password must be atleast 6 characters in length"
+      },
+    },
   },
   firstname: { type: Sequelize.STRING, notEmpty: true },
   lastname: { type: Sequelize.STRING, notEmpty: true },

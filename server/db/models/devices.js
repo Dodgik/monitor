@@ -22,7 +22,13 @@ const Device = dbSession.define('device', {
     type: Sequelize.STRING,
     allowNull: false,
     notEmpty: true,
-    unique: false
+    unique: false,
+    validate: {
+      len: {
+        args: 1,
+        msg: "Name must be atleast 1 characters in length"
+      },
+    },
   },
   latitude: {
     type: Sequelize.DECIMAL(10, 8),
@@ -36,11 +42,13 @@ const Device = dbSession.define('device', {
   }
 }, {
   validate: {
+    /*
     nameEmpty() {
       if (!this.name) {
         throw new Error('Name is require')
       }
     }
+    */
   }
 });
 

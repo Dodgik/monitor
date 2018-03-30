@@ -150,15 +150,16 @@ router.post('/pos', function (req, res, next) {
   //device.id = Math.floor(Math.random() * (1000 - 4 + 1)) + 4;
 
   dbSession.transaction(function (t) {
+    console.log('devices-pos device: ', device);
     return Device.update({
       latitude: latitude, longitude: longitude
-    }, { where: device, transaction: t });
+    }, { where: device, transaction: t, fields: ['latitude', 'longitude'] });
   }).then(function (result) {
-    console.log('devices-set commeted: ', result);
+    console.log('devices-pos commeted: ', result);
     Device.findById(id).then(upDevice => {
       res.json({ 'id': upDevice.id, 'name': upDevice.name, 'latitude': upDevice.latitude, 'longitude': upDevice.longitude });
     }).catch(function (err) {
-      console.log('devices-set-find rejected: ', err);
+      console.log('devices-pos-find rejected: ', err);
       res.json(err);
     });
   }).catch(function (err) {

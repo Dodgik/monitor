@@ -24,6 +24,9 @@ let defaultConfig = {
 for (let key in configJson) {
   defaultConfig[key] = configJson[key]
 }
+if (configJson.dialectOptions) {
+  defaultConfig.database.dialectOptions = configJson.dialectOptions
+}
 //console.log('config=', defaultConfig)
 
 module.exports = defaultConfig;

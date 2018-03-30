@@ -9,8 +9,6 @@ import {
 } from 'react-google-maps';
 import { connect } from 'react-redux';
 
-import { requestSetDevicePosition } from '../actions/devices_actions';
-
 
 class DeviceMarker extends React.Component {
   
@@ -41,7 +39,7 @@ class DeviceMarker extends React.Component {
     return (
       <Marker key={id} position={{ lat: latitude, lng: longitude }} title={name} onClick={this.handleClick} zIndex={zIndex} >
         {this.state.showInfo && (
-          <InfoWindow onCloseClick={this.handleCloseInfoClick}>
+          <InfoWindow onCloseClick={this.handleCloseInfoClick} zIndex={zIndex}>
             <div style={infoStyle}>{name}</div>
           </InfoWindow>
         )}
@@ -84,35 +82,24 @@ class Map extends React.PureComponent {
       },
     }
   }
-
-  setCenter(coords) {
-    console.log('---setCenter:', coords)
-
-    let center = {
-      lat: coords.latitude,
-      lng: coords.longitude
-    }
-    this.setState({
-      mapProps: {
-        ...this.state.mapProps,
-        center: center
-      }
-    })
-  }
-
+  
   getCenter(props) {
     let center = null;
     let { list, currentDeviceId, focusDeviceId } = props.devices
     list.map(device => {
-      if (device.latitude) {
-        if (device.id == currentDeviceId) {
-          center = { lat: device.latitude, lng: device.longitude }
-        }
-        if (device.id == focusDeviceId) {
-          center = { lat: device.latitude, lng: device.longitude }
+      const { id, latitude, longitude } = device;
+      if (latitude) {
+        if (!center && id == currentDeviceId) {
+          center = { lat: latitude, lng: longitude }
+        } else if (id == focusDeviceId) {
+          center = { lat: latitude, lng: longitude }
         }
       }
     })
+
+    if (!center && props.currentPosition && props.currentPosition.latitude) {
+      center = { lat: props.currentPosition.latitude, lng: props.currentPosition.longitude }
+    }
     console.log('---getCenter:', center)
     return center
   }
@@ -128,34 +115,7 @@ class Map extends React.PureComponent {
     console.log('---getDefaultCunter:', center)
     return center
   }
-
-  componentWillMount() {
-    console.log('---Map.componentWillMount:', this.props)
-  }
-
-  componentDidMount() {
-    console.log('---Map.componentDidMount:', this.props)
-    //this.updateCurrentPosition()
-
-    /*
-    this.getCurrentPosition().then(position => {
-      console.log('---setDefaultCunter in getCurrentPosition:', position.coords)
-      this.setCenter(position.coords)
-      /*
-      if (this.props.currentDeviceId) {
-          let device = {
-            id: this.props.currentDeviceId,
-            latitude: position.coords.latitude,
-            longitude: position.coords.longitude
-          }
-          console.log('---updateCurrentPosition:', device)
-          this.props.setDevicePosition(device)
-      }
-      */
-    //})
-    //this.subscribeWatchPosition();
-  }
-
+  
   componentWillReceiveProps(nextProps) {
     console.log('---Map.componentWillReceiveProps:', nextProps)
     let newCenter = this.getCenter(nextProps)
@@ -164,66 +124,6 @@ class Map extends React.PureComponent {
       if (!center || center.lat != newCenter.lat || center.lng != newCenter.lng) {
         this.setState({ mapProps: { ...this.state.mapProps, center: newCenter } })
       }
-    }
-    if (nextProps.currentDeviceId != this.props.currentDeviceId) {
-      this.updateCurrentPosition();
-    }
-  }
-  
-  getCurrentPosition = () => {
-    return new Promise(function (resolve, reject) {
-      try {
-        navigator.geolocation.getCurrentPosition((function (position) {
-          console.log('---getCurrentPosition: ', position)
-          resolve(position)
-        }).bind(this), function (geo_error) {
-          reject(geo_error)
-          console.error('---getCurrentPosition error: ', geo_error)
-        });
-      } catch (e) {
-          reject(e)
-          console.error('---getCurrentPosition error: ', geo_error)
-      }
-    })
-  }
-
-  updateCurrentPosition = () => {
-    if (this.props.currentDeviceId) {
-      /*
-      this.getCurrentPosition().then(pos => {
-        let device = {
-          id: this.props.currentDeviceId,
-          latitude: position.coords.latitude,
-          longitude: position.coords.longitude
-        }
-        console.log('---updateCurrentPosition:', device)
-        this.props.setDevicePosition(device)
-      })
-      */
-    }
-  }
-
-  subscribeWatchPosition = () => {
-    if (navigator.geolocation) {
-      var watchOptions = {
-        enableHighAccuracy: true,
-        maximumAge: 0,
-        timeout: 30000
-      };
-      //navigator.geolocation.clearWatch(watchID);
-      var watchID = navigator.geolocation.watchPosition((function (position) {
-        console.log('---watchPosition:', position.coords)
-        if (this.props.currentDeviceId) {
-          let device = {
-            id: this.props.currentDeviceId,
-            latitude: position.coords.latitude,
-            longitude: position.coords.longitude
-          }
-          this.props.setDevicePosition(device)
-        }
-      }).bind(this), function (err) {
-        console.warn('---watchPosition error:', err)
-      }, watchOptions);
     }
   }
 
@@ -242,6 +142,7 @@ class Map extends React.PureComponent {
 }
 
 const mapStateToProps = state => ({
+  currentPosition: state.currentPosition,
   devices: state.devices,
   list: state.devices.list,
   currentDeviceId: state.devices.currentDeviceId,
@@ -249,11 +150,4 @@ const mapStateToProps = state => ({
 });
 
 
-const mapDispatchToProps = dispatch => ({
-  setDevicePosition: (device) => {
-    dispatch(requestSetDevicePosition(device));
-  },
-});
-
-export default connect(mapStateToProps, mapDispatchToProps)(Map);
-//export default Map;
+export default connect(mapStateToProps)(Map);

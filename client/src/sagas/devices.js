@@ -2,8 +2,11 @@
 
 import { take, put, call, fork, select, takeEvery } from 'redux-saga/effects'
 import * as actions from '../actions/devices_actions'
+import * as geolocation_actions from '../actions/geolocation_actions'
 
 import api from '../api'
+
+const currentDeviceIdSelector = state => state.devices.currentDeviceId
 
 
 export function* fetchDevices() {
@@ -102,6 +105,27 @@ export function* watchSetDevicePosition() {
 }
 
 
+export function* setCurrentPosition(data) {
+  try {
+    const currentDeviceId = yield select(currentDeviceIdSelector)
+    if (currentDeviceId) {
+      let device = { id: currentDeviceId, ...data.coords }
+      const { response, error } = yield call(api.devices.pos, device)
+      if (response) {
+        yield put(actions.receiveSetDevicePosition(response))
+      } else {
+        yield put(actions.receiveFailSetDevicePosition(error))
+      }
+    }
+  } catch (e) {
+    yield put(actions.receiveFailSetDevicePosition(e))
+  }
+}
+
+export function* watchReceiveCurrentPosition() {
+  yield takeEvery(geolocation_actions.RECEIVE_CURRENT_POSITION, setCurrentPosition);
+}
+
 export function* startup() {
   yield fork(fetchDevices)
 }
@@ -115,4 +139,6 @@ export default function* root() {
   yield fork(watchSetDevice)
   yield fork(watchRemoveDevice)
   yield fork(watchSetDevicePosition)
+
+  yield fork(watchReceiveCurrentPosition)
 }

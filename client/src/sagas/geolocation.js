@@ -3,6 +3,7 @@
 import { eventChannel } from 'redux-saga'
 import { take, put, call, fork, select, takeEvery } from 'redux-saga/effects'
 import * as actions from '../actions/geolocation_actions'
+import * as devices_actions from '../actions/devices_actions'
 
 import api from '../api'
 
@@ -26,21 +27,6 @@ export function* watchGetPosition() {
 }
 
 
-
-export function* watchPosition(data) {
-  const channel = yield call(subscribeWatchPosition)
-  while (true) {
-    try {
-      let action = yield take(channel);
-      //console.warn('---saga watchPosition action:', action)
-      //throw coords 
-      yield put(action);
-    } catch (e) {
-      yield put(actions.receiveCurrentPositionFail(e))
-    }
-  }
-}
-
 export function subscribeWatchPosition() {
   return eventChannel(emit => {
     let watchID = api.geolocation.subscribeWatchPosition(coords => {
@@ -50,6 +36,21 @@ export function subscribeWatchPosition() {
       api.geolocation.unsubscribeWatchPosition()
     };
   });
+}
+
+export function* watchPosition(data) {
+  const channel = yield call(subscribeWatchPosition)
+  while (true) {
+    try {
+      let action = yield take(channel);
+      //console.warn('---saga watchPosition action:', action)
+      //throw coords 
+      yield put(action);
+      yield put(action);
+    } catch (e) {
+      yield put(actions.receiveCurrentPositionFail(e))
+    }
+  }
 }
 
 
