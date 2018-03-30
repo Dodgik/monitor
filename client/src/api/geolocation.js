@@ -55,7 +55,7 @@ export const subscribeWatchPosition = (callback) => {
       callback instanceof Function && callback(coords);
     }, function (err) {
       console.warn('---api subscribeWatchPosition error:', err)
-      actions.receiveCurrentPositionFail(coords)
+      actions.receiveCurrentPositionFail(err)
     }, watchOptions);
   }
   return watchID

@@ -59,11 +59,9 @@ const GMap = compose(
   withGoogleMap,
 )((props) =>
   <GoogleMap {...props.mapProps}>
-    {props.devices.map((device, index) => {
+    {props.list.map((device) => {
       if (device.latitude) {
-        return (
-          <DeviceMarker key={device.id} {...device} currentDeviceId={props.currentDeviceId} focusDeviceId={props.focusDeviceId}/>
-        )
+        return <DeviceMarker key={device.id} {...device} currentDeviceId={props.currentDeviceId} focusDeviceId={props.focusDeviceId}/>
       }
     }
     )}
@@ -85,7 +83,7 @@ class Map extends React.PureComponent {
   
   getCenter(props) {
     let center = null;
-    let { list, currentDeviceId, focusDeviceId } = props.devices
+    let { list, currentDeviceId, focusDeviceId, currentPosition } = props
     list.map(device => {
       const { id, latitude, longitude } = device;
       if (latitude) {
@@ -97,8 +95,8 @@ class Map extends React.PureComponent {
       }
     })
 
-    if (!center && props.currentPosition && props.currentPosition.latitude) {
-      center = { lat: props.currentPosition.latitude, lng: props.currentPosition.longitude }
+    if (!center && currentPosition && currentPosition.latitude) {
+      center = { lat: currentPosition.latitude, lng: currentPosition.longitude }
     }
     console.log('---getCenter:', center)
     return center
@@ -106,10 +104,10 @@ class Map extends React.PureComponent {
 
   getDefaultCenter(props) {
     let center = this.getCenter(props);
-    if (!center) {
-      let { list } = props.devices
-      if (list.length) {
-        center = { lat: list[0].latitude, lng: list[0].longitude }
+    if (!center && props.list.length) {
+      center = {
+        lat: props.list[0].latitude,
+        lng: props.list[0].longitude
       }
     }
     console.log('---getDefaultCunter:', center)
@@ -133,9 +131,9 @@ class Map extends React.PureComponent {
     return (
       <GMap
         mapProps={this.state.mapProps}
-        devices={this.props.devices.list}
-        currentDeviceId={this.props.devices.currentDeviceId}
-        focusDeviceId={this.props.devices.focusDeviceId}
+        list={this.props.list}
+        currentDeviceId={this.props.currentDeviceId}
+        focusDeviceId={this.props.focusDeviceId}
       />
     )
   }
@@ -143,11 +141,9 @@ class Map extends React.PureComponent {
 
 const mapStateToProps = state => ({
   currentPosition: state.currentPosition,
-  devices: state.devices,
   list: state.devices.list,
   currentDeviceId: state.devices.currentDeviceId,
   focusDeviceId: state.devices.focusDeviceId,
 });
-
 
 export default connect(mapStateToProps)(Map);
