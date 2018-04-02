@@ -1,3 +1,4 @@
+var intel = require('intel');
 var express = require('express');
 var passport = require('passport')
 var session = require('express-session')
@@ -42,6 +43,11 @@ require('../config/passport/passport.js')(passport, User);
 
 
 const router = express.Router();
+
+router.use(function (req, res, next) {
+  console.log('router Time:', Date.now(), '  Request Type:', req.method);
+  next();
+});
 
 function rootHandler(req, res) {
   //console.log("-->ssr-rootHandler: ", req.params);

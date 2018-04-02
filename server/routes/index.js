@@ -1,8 +1,10 @@
+
 var intel = require('intel');
 intel.basicConfig({
   'file': 'error.log',
   'format': '[%(date)s] %(name)s.%(levelname)s: %(message)s',
 });
+
 var express = require('express');
 var path = require('path');
 var passport = require('passport')
@@ -40,6 +42,12 @@ app.use('/a/devices', devices);
 var userRouter = require('./user');
 app.use('/a/user', userRouter);
 
+app.all('/', function (req, res, next) {
+  console.log('Root Request Type:', req.method);
+  console.log('Time:', Date.now());
+  next();
+});
+
 app.use(function (req, res, next) {
   res.header("Access-Control-Allow-Origin", "*");
   res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
@@ -75,6 +83,6 @@ app.use(express.static('public'));
 
 app.use('/', ssr);
 
-var server = app.listen(3000, '127.0.0.1', () => {
+var server = app.listen(65535, '127.0.0.1', () => {
   console.log('App listening at http://%s:%s', server.address().address, server.address().port);
 });
