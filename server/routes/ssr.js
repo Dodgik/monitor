@@ -1,3 +1,5 @@
+const config = require('../config/config.js');
+var path = require('path');
 var intel = require('intel');
 var express = require('express');
 var passport = require('passport')
@@ -27,11 +29,9 @@ const { guestUser, loggedInUser } = require('../lib/user_helper');
 
 
 const app = express();
-
 //For BodyParser
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
-
 
 // For Passport
 app.use(session({ secret: 'keyboard cat', resave: true, saveUninitialized: true })); // session secret
@@ -43,15 +43,16 @@ require('../config/passport/passport.js')(passport, User);
 
 
 const router = express.Router();
-
+/*
 router.use(function (req, res, next) {
-  console.log('router Time:', Date.now(), '  Request Type:', req.method);
+  console.log('%s %s', req.method, req.url);
   next();
 });
+*/
 
 function rootHandler(req, res) {
   //console.log("-->ssr-rootHandler: ", req.params);
-  console.log("-->ssr-req-user: ", req.user);
+  //console.log("-->ssr-req-user: ", req.user);
   //console.log("-->ssr-req-session: ", req.session);
   let initialState = { };
   if (req.isAuthenticated()) {
@@ -62,7 +63,7 @@ function rootHandler(req, res) {
   if (req.params.token) {
     initialState.user.recovery = req.params.token
   }
-  console.log("-->ssr-rootHandler initialState: ", initialState);
+  //console.log("-->ssr-rootHandler initialState: ", initialState);
 
   const redirectUrl = false;  
   if (redirectUrl) {
@@ -71,7 +72,7 @@ function rootHandler(req, res) {
     });
     res.end();
   } else {
-    res.status(200).render('index', {
+    res.status(200).render('index.ejs', {
       state: JSON.stringify(initialState),
     });
   }
@@ -79,5 +80,6 @@ function rootHandler(req, res) {
 
 router.get('/reset/:token', rootHandler);
 router.get('/', rootHandler);
+router.get('/index.php', rootHandler);
 
 module.exports = router;

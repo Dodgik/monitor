@@ -10,7 +10,7 @@ const User = dbSession.define('user', {
     unique: true,
   },
   email: {
-    type: Sequelize.STRING,
+    type: Sequelize.STRING(128),
     allowNull: false,
     unique: true,
     validate: {
@@ -18,7 +18,7 @@ const User = dbSession.define('user', {
     },
   },
   password: {
-    type: Sequelize.STRING,
+    type: Sequelize.STRING(128),
     allowNull: false,
     validate: {
       len: {
@@ -27,9 +27,9 @@ const User = dbSession.define('user', {
       },
     },
   },
-  firstname: { type: Sequelize.STRING, notEmpty: true },
-  lastname: { type: Sequelize.STRING, notEmpty: true },
-  username: { type: Sequelize.TEXT },
+  firstname: { type: Sequelize.STRING(128), notEmpty: true },
+  lastname: { type: Sequelize.STRING(128), notEmpty: true },
+  username: { type: Sequelize.STRING(128) },
 
   reset_code: { type: Sequelize.STRING(32) },
 
@@ -50,6 +50,6 @@ const User = dbSession.define('user', {
       return this.firstname && this.lastname ? this.firstname + ' ' + this.lastname : '';
     }
   },
-});
+})
 
 module.exports = User

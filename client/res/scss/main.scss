@@ -77,3 +77,14 @@ $device-edit-icon-bg: str-replace(url("data:image/svg+xml;charset=utf8,%3Csvg vi
 .device-actions .navbar-toggler-icon {
   background-image: $device-edit-icon-bg;
 }
+
+.minimize {
+  background-image: url("/images/minimize-icon.png");
+  background-size: 100%;
+  background-repeat: no-repeat;
+  position: absolute;
+  right: 0;
+  margin-right: 3px;
+  height: 26px;
+  width: 26px;
+}

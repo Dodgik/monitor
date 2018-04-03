@@ -2,9 +2,11 @@ const env = process.env.NODE_ENV || 'development';
 //const configJson = require('./config.json');
 const fs = require('fs');
 const ini = require('ini');
-//const configJson = ini.parse(fs.readFileSync('./config/config.ini', 'utf-8'))
+const configJson = ini.parse(fs.readFileSync('./config/config.ini', 'utf-8'))
 //console.log('configJson=', configJson)
 let defaultConfig = {
+  "app_port": "65535",
+
   "protocol": "http",
   "host": "localhost:3000",
 
@@ -20,14 +22,14 @@ let defaultConfig = {
   "mail_user": "vasiliy017@gmail.com",
   "mail_password": "",
 }
-/*
+
 for (let key in configJson) {
   defaultConfig[key] = configJson[key]
 }
 if (configJson.dialectOptions) {
   defaultConfig.database.dialectOptions = configJson.dialectOptions
 }
-*/
+
 //console.log('config=', defaultConfig)
 
 module.exports = defaultConfig;

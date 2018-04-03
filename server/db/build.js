@@ -14,11 +14,11 @@ var models = [
 //dbSession.dropTable('devices');
 //Device.drop();
 //dbSession.query("DROP TABLE [monitor].[dbo].[devices]");
-
-dbSession.query('DROP TABLE [dbo].[devices]')
+/*
+dbSession.query('DROP TABLE devices')
     .then(function() {
         console.log('--->DROP TABLE users');
-        return dbSession.query('DROP TABLE [dbo].[users]')
+        return dbSession.query('DROP TABLE users')
     })
     .then(function() {
         console.log('Database synchronised.');
@@ -26,7 +26,7 @@ dbSession.query('DROP TABLE [dbo].[devices]')
         console.log('----------------------> err:');
         console.log(err);
     });
-
+*/
 /*
 dbSession.query('SET FOREIGN_KEY_CHECKS = 0')
   .then(function() {

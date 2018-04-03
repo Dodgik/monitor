@@ -32,8 +32,8 @@ router.use(function (req, res, next) {
 });
 
 router.get('/', function (req, res, next) {
-  console.log('devices req.user: ', req.user);
-  console.log('devices req.isAuthenticated: ', req.isAuthenticated());
+  //console.log('devices req.user: ', req.user);
+  //console.log('devices req.isAuthenticated: ', req.isAuthenticated());
   if (!req.isAuthenticated() || !req.user) {
     return res.status(401).json({ message: 'Unauthorized' });
   }

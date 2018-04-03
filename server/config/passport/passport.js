@@ -12,6 +12,7 @@ const isValidPassword = function (userpass, password) {
 };
 
 module.exports = function(passport, user) {
+  //console.log("-->passport init");
   var User = user;
   var LocalStrategy = require('passport-local').Strategy;
 
@@ -21,7 +22,9 @@ module.exports = function(passport, user) {
 
   // used to deserialize the user
   passport.deserializeUser(function(id, done) {
+    //console.log("-->passport deserializeUser:");
     User.findById(id).then(function(user) {
+      //console.log("-->passport deserializeUser findById:", user);
       if (user) {
         let userInfo = loggedInUser(user);
         done(null, userInfo);
@@ -111,6 +114,7 @@ module.exports = function(passport, user) {
     },
 
     function (req, email, password, done) {
+      //console.log("-->passport signInOrUp:", email);
       var User = user;
       
       User.findOne({

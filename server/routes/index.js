@@ -1,4 +1,4 @@
-
+const config = require('../config/config.js');
 var intel = require('intel');
 intel.basicConfig({
   'file': 'error.log',
@@ -22,6 +22,21 @@ var crypto = require('crypto');
 var ssr = require('./ssr');
 
 const app = express();
+
+console.log('process.env.PORT=', process.env.PORT);
+console.log('config.app_port', config.app_port);
+const appPort = process.env.PORT || config.app_port || 65535
+console.log('appPort', appPort);
+app.set('port', appPort);
+
+app.use(function(req, res, next) {
+  console.log('%s %s', req.method, req.url);
+  next();
+});
+app.use(function(err, req, res, next) {
+  console.error(err.stack);
+  res.status(500).send('Something broke vas!');
+});
 
 //For BodyParser
 app.use(bodyParser.urlencoded({ extended: true }));
@@ -73,16 +88,29 @@ app.get('/protected', ensureAuthenticated, function (req, res) {
   res.send("acess granted");
 });
 
-//app.set('views', path.join(__dirname, '../views'));
+const viewsDir = './views'
+//const viewsDir = path.join(__dirname, '../views')
+console.log('-->viewsDir: ', viewsDir);
+app.set('views', viewsDir);
 app.set('view engine', 'ejs');
 
 console.log('__dirname=', __dirname);
-console.log('path=', path.join(__dirname, 'public'));
-app.use(express.static('public'));
-//app.use(express.static(path.join(__dirname, 'public')));
+const publicDir = './public'
+//const publicDir = path.join(__dirname, 'public')
+console.log('publicDir=', publicDir);
+app.use(express.static(publicDir));
+//app.use(express.static('public'));
 
 app.use('/', ssr);
 
-var server = app.listen(65535, '127.0.0.1', () => {
+var server = app.listen(appPort, '127.0.0.1', () => {
   console.log('App listening at http://%s:%s', server.address().address, server.address().port);
 });
+
+/*
+const testFolder = './';
+const fs = require('fs');
+fs.readdirSync(viewsDir).forEach(file => {
+  console.log(file);
+})
+*/

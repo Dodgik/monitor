@@ -19,7 +19,7 @@ const Device = dbSession.define('device', {
     }
   },
   name: {
-    type: Sequelize.STRING,
+    type: Sequelize.STRING(128),
     allowNull: false,
     notEmpty: true,
     unique: false,

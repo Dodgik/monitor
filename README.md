@@ -41,4 +41,9 @@ npm i --save ini
 
 npm i --save intel
 
+npm i --save mysql2
+
+npm i --save npx
+npm i --save express-htaccess-middleware
+
 npx run server\db\build.js
