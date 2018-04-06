@@ -88,3 +88,26 @@ $device-edit-icon-bg: str-replace(url("data:image/svg+xml;charset=utf8,%3Csvg vi
   height: 26px;
   width: 26px;
 }
+.show-menu {
+  left: 10px;
+}
+.minimized {
+  .panel > *:not(.header) {
+    display: none;
+  }
+
+  .panel > .header {
+    border: none;
+    position: absolute;
+    top: 5px;
+    left: 10rem;
+
+    .user-name, .minimaze {
+      display: none;
+    }
+  }
+
+  #map {
+    margin-left: 0;
+  }
+}

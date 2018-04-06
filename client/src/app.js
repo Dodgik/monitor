@@ -16,8 +16,11 @@ import { viewItem } from './actions/list_actions';
 class App extends Component {
   render() {
     console.warn('-->App.render:', this.props)
+    let rootClassName = 'app-root'
+    if (this.props.menuClosed)
+      rootClassName += ' minimized'
     return (
-      <div className="app-root">
+      <div className={rootClassName}>
         <div className="panel">
           <Header />
           <LoginPanel />
@@ -41,11 +44,11 @@ class App extends Component {
   }
 }
 
-/*
+
 const mapStateToProps = state => ({
-  displayName: state.user.displayName,
+  menuClosed: state.list.menuClosed,
 });
 
 export default connect(mapStateToProps)(App);
-*/
-export default App;
+
+//export default App;

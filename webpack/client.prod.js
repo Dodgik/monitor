@@ -36,7 +36,7 @@ module.exports = {
         }),
       },
       {
-        test: /\.(png|jpg|gif)$/,
+        test: /\.(png|jpg|gif|ico)$/,
         use: [{
           loader: 'file-loader',
           options: {
@@ -57,7 +57,7 @@ module.exports = {
     }),
     new ExtractTextPlugin('css/main.css'),
     new CopyWebpackPlugin([
-        { from: './res/images/favicon.ico', to: 'images' }
+        { from: './res/images/', to: 'images' }
     ]), 
   ],
 };

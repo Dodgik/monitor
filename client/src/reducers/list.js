@@ -1,8 +1,14 @@
+import * as actions from '../actions/list_actions'
 import { LIST_ACTIONS } from '../consts/action_types';
 import { LISTS } from '../consts/default_state';
 
 export default (state = LISTS, action) => {
   switch (action.type) {
+    case actions.MINIMIZE_MENU:
+      return { ...state, menuClosed: true };
+    case actions.OPEN_MENU:
+      return { ...state, menuClosed: false };
+
     case LIST_ACTIONS.ITEM_PREVIEW:
       return { ...state, itemPreview: state.items[action.name.toUpperCase()] };
     case LIST_ACTIONS.ITEM_VIEW:

@@ -1,5 +1,8 @@
 // eslint-disable-next-line
 export const LIST_ACTIONS = {
+  MINIMIZE_MENU: 'MINIMIZE_MENU',
+  OPEN_MENU: 'OPEN_MENU',
+
   ITEM_PREVIEW: 'ITEM_PREVIEW',
   ITEM_VIEW: 'ITEM_VIEW',
   ITEM_ADD: 'ITEM_ADD',
