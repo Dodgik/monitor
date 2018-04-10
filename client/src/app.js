@@ -14,15 +14,31 @@ import { viewItem } from './actions/list_actions';
 
 
 class App extends Component {
+  constructor() {
+    super();
+
+    this.state = {
+      menuClosed: false
+    }
+  }
+
+  onMenuClose() {
+    this.setState({ menuClosed: !this.state.menuClosed });
+  }
+
   render() {
     console.warn('-->App.render:', this.props)
     let rootClassName = 'app-root'
+    if (this.state.menuClosed)
+      rootClassName += ' minimized'
+    /*
     if (this.props.menuClosed)
       rootClassName += ' minimized'
+    */
     return (
       <div className={rootClassName}>
         <div className="panel">
-          <Header />
+          <Header onMenuClose={this.onMenuClose.bind(this)} />
           <LoginPanel />
           {/*<ListItems {...this.props} />*/}
           <Menu />

@@ -2,6 +2,7 @@ const path = require('path');
 const webpack = require('webpack');
 var HtmlWebpackPlugin = require('html-webpack-plugin');
 const ExtractTextPlugin = require('extract-text-webpack-plugin');
+const CopyWebpackPlugin = require('copy-webpack-plugin');
 
 module.exports = {
   context: path.join(__dirname, '../client'),
@@ -20,6 +21,7 @@ module.exports = {
     publicPath: '/',
   },
   devServer: {
+    contentBase: path.join(__dirname, '../server/public'),
     hot: true,
     publicPath: '/',
     historyApiFallback: true
@@ -40,11 +42,13 @@ module.exports = {
         use: ['style-loader', 'css-loader', 'sass-loader']
       },
       {
-        test: /\.(png|jpg|gif|ico)$/,
+        test: /\.(png|jpg|gif|ico|svg)$/,
         use: [
           {
             loader: 'file-loader',
-            options: {}  
+            options: {
+              outputPath: 'images/',
+              publicPath: '/images/'}  
           }
         ]
       },
@@ -58,5 +62,8 @@ module.exports = {
       template: path.join(__dirname, '../server/views/index.dev.ejs'),
       inject: false,
     }),
+    new CopyWebpackPlugin([
+        { from: './res/images/', to: 'images' }
+    ]), 
   ],
 };

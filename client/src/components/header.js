@@ -9,17 +9,17 @@ class Header extends Component {
     } else {
       this.props.closeMenu();
     }
+    this.props.onMenuClose();
   }
 
   render() {
     return (
-      <div className="header p-1">
+      <div className="header p-2 m-1">
         <div className="user-name">Welcome, {this.props.displayName}</div>
         {this.props.menuClosed ? (
           <button type="button" className="btn btn-info btn-sm show-menu" onClick={this.toggleMinimize.bind(this)}>Menu</button>
         ):(
           <button type="button" className="btn btn-light close" onClick={this.toggleMinimize.bind(this)}>
-            <span aria-hidden="true">&times;</span>
           </button>
         )}
       </div>

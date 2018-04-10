@@ -78,16 +78,17 @@ $device-edit-icon-bg: str-replace(url("data:image/svg+xml;charset=utf8,%3Csvg vi
   background-image: $device-edit-icon-bg;
 }
 
-.minimize {
-  background-image: url("/images/minimize-icon.png");
+
+.close {
+  background-image: url("/images/ic_close_black_24px.svg");
   background-size: 100%;
   background-repeat: no-repeat;
   position: absolute;
-  right: 0;
-  margin-right: 3px;
-  height: 26px;
-  width: 26px;
+  right: 0.4rem;
+  height: 24px;
+  width: 24px;
 }
+
 .show-menu {
   left: 10px;
 }
@@ -99,8 +100,7 @@ $device-edit-icon-bg: str-replace(url("data:image/svg+xml;charset=utf8,%3Csvg vi
   .panel > .header {
     border: none;
     position: absolute;
-    top: 5px;
-    left: 10rem;
+    left: 14rem;
 
     .user-name, .minimaze {
       display: none;
