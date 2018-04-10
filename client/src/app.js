@@ -44,11 +44,11 @@ class App extends Component {
   }
 }
 
-
+/*
 const mapStateToProps = state => ({
   menuClosed: state.list.menuClosed,
 });
 
 export default connect(mapStateToProps)(App);
-
-//export default App;
+*/
+export default App;

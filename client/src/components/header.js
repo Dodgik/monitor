@@ -18,7 +18,9 @@ class Header extends Component {
         {this.props.menuClosed ? (
           <button type="button" className="btn btn-info btn-sm show-menu" onClick={this.toggleMinimize.bind(this)}>Menu</button>
         ):(
-          <button type="button" className="btn btn-light btn-sm minimize" onClick={this.toggleMinimize.bind(this)}></button>
+          <button type="button" className="btn btn-light close" onClick={this.toggleMinimize.bind(this)}>
+            <span aria-hidden="true">&times;</span>
+          </button>
         )}
       </div>
     );
