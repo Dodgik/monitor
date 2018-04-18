@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en">
 
 <head>
@@ -27,17 +27,22 @@
 <body>
   <div id="body-wrap"></div>
   <script>
-	window.__INITIAL_STATE__ = {
-		user: {
-			displayName: 'Guest',
-			loggedIn: false
-		}
-	};
+    window.__INITIAL_STATE__ = {
+      api: {
+        protocol: 'http',
+        host: 'localhost:3000',
+        maps_api_key: 'AIzaSyAWXZwnl9PDC6_pu6I6vfODtuJ3BipQibY',
+      },
+      user: {
+        displayName: 'Guest',
+        loggedIn: false,
+      },
+    };
   </script>
   <script>
     window.app = {
-	  apiHost: 'http://localhost:3000/'
-	};
+      apiHost: 'http://localhost:3000/'
+    };
   </script>
   <script src="/js/index.js"></script>
 </body>

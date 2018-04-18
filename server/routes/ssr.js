@@ -54,7 +54,13 @@ function rootHandler(req, res) {
   //console.log("-->ssr-rootHandler: ", req.params);
   //console.log("-->ssr-req-user: ", req.user);
   //console.log("-->ssr-req-session: ", req.session);
-  let initialState = { };
+  let initialState = {
+    api: {
+      protocol: config.protocol,
+      host: config.host,
+      maps_api_key: config.maps_api_key,
+    }
+  };
   if (req.isAuthenticated()) {
     initialState.user = loggedInUser(req.user)
   } else {

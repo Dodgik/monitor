@@ -48,9 +48,10 @@ class DeviceMarker extends React.Component {
   }
 }
 
+
 const GMap = compose(
   withProps({
-    googleMapURL: "https://maps.googleapis.com/maps/api/js?key=AIzaSyAWXZwnl9PDC6_pu6I6vfODtuJ3BipQibY&v=3.exp&libraries=geometry,drawing,places",
+
     loadingElement: <div style={{ height: `100%` }} />,
     containerElement: <div style={{ height: `100%` }} id="map" />,
     mapElement: <div style={{ height: `100%` }} />,
@@ -125,11 +126,18 @@ class Map extends React.PureComponent {
     }
   }
 
+  googleMapURL(key) {
+    return `https://maps.googleapis.com/maps/api/js?key=${key}&v=3.exp&libraries=geometry,drawing,places`;
+  }
+
   render() {
     console.warn('---Map: render->props: ', this.props);
     console.warn('---Map: render->state: ', this.state);
+    const googleMapURL = this.googleMapURL(this.props.maps_api_key)
+    console.warn('---Map: render->googleMapURL: ', googleMapURL);
     return (
       <GMap
+        googleMapURL={googleMapURL}
         mapProps={this.state.mapProps}
         list={this.props.list}
         currentDeviceId={this.props.currentDeviceId}
@@ -140,6 +148,7 @@ class Map extends React.PureComponent {
 }
 
 const mapStateToProps = state => ({
+  maps_api_key: state.api.maps_api_key,
   currentPosition: state.currentPosition,
   list: state.devices.list,
   currentDeviceId: state.devices.currentDeviceId,
