@@ -18,17 +18,17 @@ class DeviceMarker extends React.Component {
   }
 
   render() {
-    console.log('---DeviceMarker.render:', this.props)
-    let { id, latitude, longitude, name, currentDeviceId, focusDeviceId } = this.props;
-    let zIndex = 1;
+    //console.log('---DeviceMarker.render:', this.props)
+    let { id, latitude, longitude, name, currentDeviceId, focusDeviceId } = this.props
+    let zIndex = 1
     let infoStyle = {}
     if (id == currentDeviceId) {
       infoStyle = { fontWeight: 'bold' }
-      zIndex = 2;
+      zIndex = 2
     }
     if (id == focusDeviceId) {
-      infoStyle = { ...infoStyle, backgroundColor: `yellow`, padding: '5px' }
-      zIndex = 3;
+      infoStyle = { ...infoStyle, backgroundColor: 'yellow', padding: '5px' }
+      zIndex = 3
     }
     return (
       <Marker key={id} position={{ lat: latitude, lng: longitude }} title={name} onClick={this.handleClick} zIndex={zIndex} >

@@ -10,6 +10,7 @@ html
       link(rel="stylesheet", href="style.css", data-inline)
   body
     p Hi #{name},
-    p A Password change request was received at devmon.com
+    p A Password change request was received at
+        a(href="https://devmon.online") devmon.online
     p Otherwise, please proceed to change your password via the following link:
     a(href=recoveryUrl) #{recoveryUrl}

@@ -43,7 +43,7 @@ class App extends Component {
           {/*<ListItems {...this.props} />*/}
           <Menu />
           <Route exact path='/' render={(props) => (
-            <ItemView {...props}  />
+            <ItemView {...props} />
           )} />
             {/*<Home {...props} />*/}
           {/*<Route exact path="/" component={Home} />*/}
