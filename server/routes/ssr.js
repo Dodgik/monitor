@@ -2,9 +2,7 @@ const config = require('../config/config.js');
 var path = require('path');
 var intel = require('intel');
 var express = require('express');
-var passport = require('passport')
-var session = require('express-session')
-var bodyParser = require('body-parser')
+var passport = require('passport');
 /*
 var React = require('react');
 var ReactDOMServer = require('react-dom/server');
@@ -27,16 +25,6 @@ import App from '../../client/src/app';
 */
 const { guestUser, loggedInUser } = require('../lib/user_helper');
 
-
-const app = express();
-//For BodyParser
-app.use(bodyParser.urlencoded({ extended: true }));
-app.use(bodyParser.json());
-
-// For Passport
-app.use(session({ secret: 'keyboard cat', resave: true, saveUninitialized: true })); // session secret
-app.use(passport.initialize());
-app.use(passport.session()); // persistent login sessions
 
 var User = require('../db/models/users');
 require('../config/passport/passport.js')(passport, User);

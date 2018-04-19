@@ -12,6 +12,13 @@ let defaultConfig = {
 
   "maps_api_key": "",
 
+  "session_secret": "local-dev-ss",
+  "session_name": "vas",
+
+  "mail_sender": "vasiliy017@gmail.com",
+  "mail_user": "vasiliy017@gmail.com",
+  "mail_password": "",
+
   "database": {
     "username": "sa",
     "password": "avas",
@@ -19,10 +26,6 @@ let defaultConfig = {
     "host": "127.0.0.1",
     "dialect": "mssql",
   },
-
-  "mail_sender": "vasiliy017@gmail.com",
-  "mail_user": "vasiliy017@gmail.com",
-  "mail_password": "",
 }
 
 for (let key in configJson) {

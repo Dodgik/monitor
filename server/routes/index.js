@@ -33,18 +33,18 @@ app.use(function(req, res, next) {
   console.log('%s %s', req.method, req.url);
   next();
 });
-app.use(function(err, req, res, next) {
-  console.error(err.stack);
-  res.status(500).send('Something broke vas!');
-});
 
-//For BodyParser
+
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 
 
-// For Passport
-app.use(session({ secret: 'keyboard cat', resave: true, saveUninitialized: true })); // session secret
+app.use(session({
+  secret: config.session_secret,
+  name: config.session_name,
+  resave: true,
+  saveUninitialized: false
+}));
 app.use(passport.initialize());
 app.use(passport.session()); // persistent login sessions
 
@@ -102,6 +102,31 @@ app.use(express.static(publicDir));
 //app.use(express.static('public'));
 
 app.use('/', ssr);
+app.use('/view/*', ssr);
+
+app.use(function(err, req, res, next) {
+  console.error('-->500: ', req.url);
+
+  res.status(err.status || 500);
+  res.render('500', { error: err });
+});
+
+app.use(function(req, res, next) {
+  console.error('-->404: ', req.url);
+  res.status(404);
+
+  if (req.accepts('html')) {
+    res.render('404', { url: req.url });
+    return;
+  }
+
+  if (req.accepts('json')) {
+    res.send({ error: 'Not found' });
+    return;
+  }
+
+  res.type('txt').send('Not found');
+});
 
 var server = app.listen(appPort, '127.0.0.1', () => {
   console.log('App listening at http://%s:%s', server.address().address, server.address().port);
