@@ -1,7 +1,7 @@
 import React, { PropTypes, Component } from 'react';
 import { connect } from 'react-redux';
 import * as devicesActions from '../actions/devices_actions';
-import Device from './device';
+import Device from './Device';
 
 
 class Devices extends Component {

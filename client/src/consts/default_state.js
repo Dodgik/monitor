@@ -1,11 +1,11 @@
-import LIST_ITEMS from './list_items';
+import menuItems from './menuItems';
 
 const defaultItemName = 'devices';
 // eslint-disable-next-line
 export const LISTS = {
   menuClosed: false,
-  items: LIST_ITEMS,
+  items: menuItems,
   itemPreview: null,
-  itemView: LIST_ITEMS[defaultItemName.toUpperCase()],
+  itemView: menuItems[defaultItemName.toUpperCase()],
   defaultItemName: defaultItemName
 }

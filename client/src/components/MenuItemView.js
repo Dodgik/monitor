@@ -1,10 +1,12 @@
 import React, { Component } from 'react';
+import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
-import Home from './home';
-import Devices from './devices';
-import Groups from './groups';
-import Account from './account';
+import { viewItem } from '../actions/list_actions';
+import Menu from './Menu';
+import Devices from './Devices';
+import Groups from './Groups';
+import Account from './Account';
 
 class ListItemView extends Component {
   components = {
@@ -48,18 +50,26 @@ class ListItemView extends Component {
     if (item.component) {
       var Component = this.components[item.component];
       return (
-        <div className="view_item" key={item.name}>
-          <Component {...this.props} />
+        <div>
+          <Menu />
+
+          <div className="view_item" key={item.name}>
+            <Component {...this.props} />
+          </div>
         </div>
       );
     } else {
       return (
-        <div className="view_item" key={item.name}>
-          <Link to={'/'}>
-            <button type="button">Back</button>
-          </Link>
-          <h2>{item.name}</h2>
-          <p>{item.description}</p>
+        <div>
+          <Menu />
+
+          <div className="view_item" key={item.name}>
+            <Link to={'/'}>
+              <button type="button">Back</button>
+            </Link>
+            <h2>{item.name}</h2>
+            <p>{item.description}</p>
+          </div>
         </div>
       );
     }
@@ -76,4 +86,17 @@ ListItemView.defaultProps = {
   item: null,
 };
 
-export default ListItemView;
+
+const mapStateToProps = state => ({
+  item: state.list.itemView,
+  defaultItemName: state.list.defaultItemName,
+});
+
+const mapDispatchToProps = dispatch => ({
+  viewItem: (name) => {
+    dispatch(viewItem(name));
+  },
+});
+
+
+export default connect(mapStateToProps, mapDispatchToProps)(ListItemView);

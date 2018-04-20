@@ -1,16 +1,9 @@
 import React, { PropTypes, Component } from 'react';
 import { Route } from 'react-router-dom';
-import Header from './components/header';
+import Header from './components/Header';
 import LoginPanel from './components/LoginPanel';
-import Map from './components/map';
-import Menu from './components/menu';
-import Home from './components/home';
-import NotFound from './components/not_found';
-import ItemView from './containers/list_item_view';
-import ListItems from './containers/list_items';
-//import favicon from '../res/images/favicon.ico';
-import { connect } from 'react-redux';
-import { viewItem } from './actions/list_actions';
+import Map from './components/Map';
+import MenuItemView from './components/MenuItemView';
 
 
 class App extends Component {
@@ -31,27 +24,19 @@ class App extends Component {
     let rootClassName = 'app-root'
     if (this.state.menuClosed)
       rootClassName += ' minimized'
-    /*
-    if (this.props.menuClosed)
-      rootClassName += ' minimized'
-    */
+
     return (
       <div className={rootClassName}>
         <div className="panel">
           <Header onMenuClose={this.onMenuClose.bind(this)} />
           <LoginPanel />
-          {/*<ListItems {...this.props} />*/}
-          <Menu />
           <Route exact path='/' render={(props) => (
-            <ItemView {...props} />
+            <MenuItemView {...props} />
           )} />
-            {/*<Home {...props} />*/}
-          {/*<Route exact path="/" component={Home} />*/}
           <Route path='/view/:name' render={(props) => (
-            <ItemView {...props} />
+            <MenuItemView {...props} />
           )} />
-          {/*<Route exact path="/view/:name" component={ItemView} />*/}
-          {/*<Route exact path='*' component={NotFound} />*/}
+          {/*<Route exact path="/view/:name" component={MenuItemView} />*/}
         </div>
         {/**/}
         <Map id="map"/>
@@ -60,11 +45,4 @@ class App extends Component {
   }
 }
 
-/*
-const mapStateToProps = state => ({
-  menuClosed: state.list.menuClosed,
-});
-
-export default connect(mapStateToProps)(App);
-*/
 export default App;
