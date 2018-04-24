@@ -1,6 +1,6 @@
 import React, { PropTypes, Component } from 'react';
 import { connect } from 'react-redux';
-import * as devicesActions from '../actions/devices_actions';
+import * as devicesActions from '../../actions/devices_actions';
 import Device from './Device';
 
 
@@ -34,7 +34,7 @@ class Devices extends Component {
   }
 
   componentWillReceiveProps(nextProps) {
-      console.log('---Devices.componentWillReceiveProps:', nextProps)
+    console.log('---Devices.componentWillReceiveProps:', nextProps)
     if (nextProps.actionDevice && !nextProps.actionDevice.id) {
       let state = { ...nextProps.actionDevice };
 

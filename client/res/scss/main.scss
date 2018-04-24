@@ -50,34 +50,34 @@ div, p, span {
   width: 18rem;
 }
 
+.icon-logo {
+  background-image: url("/images/logo.png");
+  background-color: transparent;
+  background-size: 100%;
+  background-repeat: no-repeat;
+  position: absolute;
+  left: 0.4rem;
+  height: 30px;
+  width: 30px;
+}
+
 .header {
   display: flex;
   flex-direction: column;
   align-items: center;
+  height: 2rem;
+
   h1 {
     text-align: center;
   }
-  border-bottom: 2px solid gray;
-}
 
-.menu-items {
-  flex-wrap: wrap;
-
-  button {
-    border-color: #17a2b8;
-  }
-}
-.nav-tabs .nav-link {
-  color: #fff;
-  background-color: #7f919e;
-  border-color: #dee2e6 #dee2e6 #fff;
+  //border-bottom: 2px solid gray;
 }
 
 $device-edit-icon-bg: str-replace(url("data:image/svg+xml;charset=utf8,%3Csvg viewBox='0 0 30 30' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath stroke='#{$navbar-light-color}' stroke-width='2' stroke-linecap='round' stroke-miterlimit='10' d='M4 7h22M4 15h22M4 23h22'/%3E%3C/svg%3E"), "#", "%23") !default;
 .device-actions .navbar-toggler-icon {
   background-image: $device-edit-icon-bg;
 }
-
 
 .close {
   background-image: url("/images/ic_close_black_24px.svg");
@@ -87,8 +87,22 @@ $device-edit-icon-bg: str-replace(url("data:image/svg+xml;charset=utf8,%3Csvg vi
   right: 0.4rem;
   height: 24px;
   width: 24px;
+  top: 0.8rem;
 }
 
+.nav-tabs .nav-link {
+  color: #fff;
+  background-color: #7f919e;
+  border-color: #dee2e6 #dee2e6 #fff;
+}
+
+.menu-items {
+  flex-wrap: wrap;
+
+  button {
+    border-color: #17a2b8;
+  }
+}
 .show-menu {
   left: 10px;
 }

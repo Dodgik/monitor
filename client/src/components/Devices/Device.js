@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import * as devicesActions from '../actions/devices_actions';
+import * as devicesActions from '../../actions/devices_actions';
 
 class Device extends Component {
   constructor(props) {
@@ -184,4 +184,3 @@ const mapDispatchToProps = dispatch => ({
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(Device);
-//export default Device;

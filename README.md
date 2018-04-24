@@ -46,4 +46,6 @@ npm i --save mysql2
 npm i --save npx
 npm i --save express-htaccess-middleware
 
+npm i --save react-popper
+
 npx run server\db\build.js
