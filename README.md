@@ -48,4 +48,7 @@ npm i --save express-htaccess-middleware
 
 npm i --save react-popper
 
+npm i --save react-bootstrap
+npm uninstall react-bootstrap
+
 npx run server\db\build.js

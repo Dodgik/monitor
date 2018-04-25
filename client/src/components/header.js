@@ -1,14 +1,20 @@
 import React, { PropTypes, Component } from 'react';
 import { connect } from 'react-redux';
 import * as listActions from '../actions/list_actions';
-//import { Manager, Target, Popper, Arrow } from 'react-popper'
+import { Popper, Arrow } from 'react-popper'
+
 
 class Header extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      openUserInfo: false
+      openUserInfo: false,
+      show: false,
     };
+  }
+
+  handleClick(e) {
+    this.setState({ target: e.target, show: !this.state.show });
   }
 
   toggleUserInfo(e) {
@@ -28,22 +34,23 @@ class Header extends Component {
   render() {
     return (
       <div className="header m-2">
-        <button type="button" className="icon-logo"></button>
-        {/*
-        <Manager>
-          <Target style={{ width: 120, height: 120, background: '#b4da55' }}>
-            <button type="button" className="icon-logo"></button>
-          </Target>
-          <Popper placement="left" className="popper">
-            Left Content
-            <Arrow className="popper__arrow"/>
+
+        <button type="button" className="icon-logo" onClick={this.handleClick.bind(this)} ref={(div) => this.target = div}></button>
+        {this.state.show && (
+          <Popper className="popper popover fade bs-popover-bottom show" target={this.target}>
+            <div className="popover-body">
+              <h5>{this.props.displayName}</h5>
+              <h6>{this.props.email}</h6>
+            </div>
+            <h3 className="popover-header text-right">
+              <a href="/logout">
+                <button type="button" className="btn btn-outline-secondary btn-sm">Logout</button>
+              </a>
+            </h3>
+            <Arrow className="popper__arrow arrow "/>
           </Popper>
-          <Popper placement="right" className="popper">
-            Right Content
-            <Arrow className="popper__arrow"/>
-          </Popper>
-        </Manager>
-        */}
+        )}
+
         <div className="user-name mt-1">
           Welcome,
           <div className="dropdown float-right ml-3">
@@ -67,6 +74,7 @@ class Header extends Component {
 
 const mapStateToProps = state => ({
   displayName: state.user.displayName,
+  email: state.user.email,
   menuClosed: state.list.menuClosed,
 });
 
