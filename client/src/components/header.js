@@ -2,6 +2,7 @@ import React, { PropTypes, Component } from 'react';
 import { connect } from 'react-redux';
 import * as listActions from '../actions/list_actions';
 import { Popper, Arrow } from 'react-popper'
+import UserInfoPopover from './UserInfoPopover'
 
 
 class Header extends Component {
@@ -13,13 +14,13 @@ class Header extends Component {
     };
   }
 
-  handleClick(e) {
-    this.setState({ target: e.target, show: !this.state.show });
+  handleBlur(e) {
+    setTimeout(() => this.setState({ target: e.target, openUserInfo: !this.state.openUserInfo }), 1000);
   }
 
   toggleUserInfo(e) {
     e.stopPropagation();
-    this.setState({ openUserInfo: !this.state.openUserInfo });
+    this.setState({ target: e.target, openUserInfo: !this.state.openUserInfo });
   }
 
   toggleMinimize() {
@@ -33,35 +34,19 @@ class Header extends Component {
 
   render() {
     return (
-      <div className="header m-2">
-
-        <button type="button" className="icon-logo" onClick={this.handleClick.bind(this)} ref={(div) => this.target = div}></button>
-        {this.state.show && (
-          <Popper className="popper popover fade bs-popover-bottom show" target={this.target}>
-            <div className="popover-body">
-              <h5>{this.props.displayName}</h5>
-              <h6>{this.props.email}</h6>
-            </div>
-            <h3 className="popover-header text-right">
-              <a href="/logout">
-                <button type="button" className="btn btn-outline-secondary btn-sm">Logout</button>
-              </a>
-            </h3>
-            <Arrow className="popper__arrow arrow "/>
-          </Popper>
-        )}
-
+      <div className="header m-2" onBlur={this.handleBlur.bind(this)}>
         <div className="user-name mt-1">
           Welcome,
-          <div className="dropdown float-right ml-3">
-            <a className="dropdown-toggle text-dark" href="#" onClick={this.toggleUserInfo.bind(this)}>
-             {this.props.displayName}
+          {this.props.loggedIn ? (
+            <a className="dropdown-toggle text-dark ml-2" href="#" onClick={this.toggleUserInfo.bind(this)} ref={(div) => this.target = div}>
+              {this.props.displayName}
             </a>
-            <div className="dropdown-menu dropdown-menu-right">
-              <a className="dropdown-item" href="/logout"><button type="button" className="btn btn-primary btn-block">Logout</button></a>
-            </div>
-          </div>
+          ):(
+            <span className="ml-2">{this.props.displayName}</span>
+          )}
         </div>
+        {this.state.openUserInfo && (<UserInfoPopover target={this.target} />)}
+
         {this.props.menuClosed ? (
           <button type="button" className="btn btn-info btn-sm show-menu" onClick={this.toggleMinimize.bind(this)}>Menu</button>
         ):(
@@ -73,6 +58,7 @@ class Header extends Component {
 }
 
 const mapStateToProps = state => ({
+  loggedIn: state.user.loggedIn,
   displayName: state.user.displayName,
   email: state.user.email,
   menuClosed: state.list.menuClosed,

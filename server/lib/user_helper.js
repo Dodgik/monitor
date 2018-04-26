@@ -10,6 +10,7 @@ const loggedInUser = function (user) {
     email: user.email,
     displayName: user.displayName,
     firstname: user.firstname,
+    lastname: user.lastname,
   }
 
   return userInfo;
