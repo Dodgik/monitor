@@ -1,7 +1,7 @@
 import React, { PropTypes, Component } from 'react';
 import { Route } from 'react-router-dom';
 import Header from './components/Header';
-import LoginPanel from './components/LoginPanel';
+import { AuthPanel } from './components/Auth';
 import Map from './components/Map';
 import MenuItemView from './components/MenuItemView';
 
@@ -20,7 +20,7 @@ class App extends Component {
   }
 
   render() {
-    console.warn('-->App.render:', this.props)
+    //console.warn('-->App.render:', this.props)
     let rootClassName = 'app-root'
     if (this.state.menuClosed)
       rootClassName += ' minimized'
@@ -29,7 +29,7 @@ class App extends Component {
       <div className={rootClassName}>
         <div className="panel">
           <Header onMenuClose={this.onMenuClose.bind(this)} />
-          <LoginPanel />
+          <AuthPanel />
           <Route exact path='/' render={(props) => (
             <MenuItemView {...props} />
           )} />
@@ -38,7 +38,6 @@ class App extends Component {
           )} />
           {/*<Route exact path="/view/:name" component={MenuItemView} />*/}
         </div>
-        {/**/}
         <Map id="map"/>
       </div>
     );

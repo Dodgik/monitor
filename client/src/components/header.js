@@ -15,11 +15,13 @@ class Header extends Component {
   }
 
   handleBlur(e) {
-    setTimeout(() => this.setState({ target: e.target, openUserInfo: !this.state.openUserInfo }), 1000);
+    clearTimeout(this.closeTimer);
+    this.closeTimer = setTimeout(() => this.setState({ target: e.target, openUserInfo: false }), 500);
   }
 
   toggleUserInfo(e) {
-    e.stopPropagation();
+    e.preventDefault();
+    clearTimeout(this.closeTimer);
     this.setState({ target: e.target, openUserInfo: !this.state.openUserInfo });
   }
 

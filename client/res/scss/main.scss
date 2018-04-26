@@ -1,6 +1,5 @@
 @import "~bootstrap/scss/bootstrap";
 @import './palette.scss';
-@import './home.scss';
 @import './view_item.scss';
 @import './map.scss';
 
@@ -64,12 +63,7 @@ div, p, span {
 .header {
   display: flex;
   flex-direction: column;
-  align-items: center;
   height: 2rem;
-
-  h1 {
-    text-align: center;
-  }
 
   //border-bottom: 2px solid gray;
 }

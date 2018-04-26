@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import axios from 'axios';
 import { connect } from 'react-redux';
-import * as userActions from '../actions/user_actions';
+import * as userActions from '../../actions/user_actions';
 
 class Login extends Component {
   constructor(props) {
@@ -23,23 +23,6 @@ class Login extends Component {
     this.setState({ password: e.target.value });
   }
   handleLogin() {
-    /*
-    console.log("EMail: " + this.state.email);
-    console.log("Password: " + this.state.password);
-    let apiHost = app.apiHost || '/'
-    axios.post(`${apiHost}login`, {
-        email: this.state.email,
-        password: this.state.password
-      }, { headers: { 'X-Requested-With': 'XMLHttpRequest' } })
-      .then(function (response) {
-        //console.log(response);
-        window.location.reload()
-      })
-      .catch(function (error) {
-        console.error(error);
-        this.setState({ loginError: error.message });
-      });
-    */
     const email = this.refs.email.value;
     const password = this.refs.password.value;
 

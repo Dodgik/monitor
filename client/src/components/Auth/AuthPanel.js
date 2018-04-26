@@ -1,9 +1,11 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import Login from '../components/login';
+import Login from './Login';
 
-const LoginPanel = (props) => {
-  console.warn('-->LoginPanel.props:', props)
+const AuthPanel = (props) => {
+  if (props.loggedIn) {
+    return null;
+  }
   return (
     <div className="p-2">
       { props.loggedIn ? (
@@ -19,4 +21,4 @@ const mapStateToProps = state => ({
   loggedIn: state.user.loggedIn,
 });
 
-export default connect(mapStateToProps)(LoginPanel);
+export default connect(mapStateToProps)(AuthPanel);
