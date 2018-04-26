@@ -15,9 +15,12 @@ let defaultConfig = {
   "session_secret": "local-dev-ss",
   "session_name": "vas",
 
-  "mail_sender": "vasiliy017@gmail.com",
-  "mail_user": "vasiliy017@gmail.com",
+  "mail_host": "",
+  "mail_port": "465",
+  "mail_sender": "",
+  "mail_user": "",
   "mail_password": "",
+  "mail_support": "",
 
   "database": {
     "username": "sa",
