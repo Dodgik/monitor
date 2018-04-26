@@ -11,10 +11,15 @@ const sendEmail = function(template, user) {
     preview: false,
     send: true,
     transport: {
-      service: 'gmail',
+      host: config.mail_host,
+      port: config.mail_port,
+      secure: true,
       auth: {
         user: config.mail_user,
         pass: config.mail_password
+      },
+      tls: {
+        rejectUnauthorized: false
       }
     },
     juiceResources: {
