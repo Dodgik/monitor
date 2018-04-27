@@ -1,4 +1,7 @@
+import AuthRoutes from './AuthRoutes';
 import AuthPanel from './AuthPanel';
 import Login from './Login';
+import Forgot from './Forgot';
+import Reset from './Reset';
 
-export { AuthPanel, Login };
+export { AuthRoutes, AuthPanel, Login, Forgot, Reset };

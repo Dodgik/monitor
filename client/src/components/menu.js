@@ -11,7 +11,7 @@ class Menu extends Component {
         {
           Object.keys(items).map((key) => {
             const item = items[key];
-            console.log('-->Menu.item: ', item)
+            //console.log('-->Menu.item: ', item)
             return (
               <li className="nav-item" key={item.name}>
                 <NavLink exact to={item.default ? '/' : `/view/${item.name}`} key={item.name} className="nav-link" activeClassName="active">

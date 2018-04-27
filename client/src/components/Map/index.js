@@ -61,7 +61,7 @@ class Map extends React.PureComponent {
     if (!center && currentPosition && currentPosition.latitude) {
       center = { lat: currentPosition.latitude, lng: currentPosition.longitude }
     }
-    console.log('---getCenter:', center)
+    //console.log('---getCenter:', center)
     return center
   }
 
@@ -73,12 +73,12 @@ class Map extends React.PureComponent {
         lng: props.list[0].longitude
       }
     }
-    console.log('---getDefaultCunter:', center)
+    //console.log('---getDefaultCunter:', center)
     return center
   }
   
   componentWillReceiveProps(nextProps) {
-    console.log('---Map.componentWillReceiveProps:', nextProps)
+    //console.log('---Map.componentWillReceiveProps:', nextProps)
     let newCenter = this.getCenter(nextProps)
     if (newCenter) {
       let { center } = this.state.mapProps;
@@ -93,10 +93,10 @@ class Map extends React.PureComponent {
   }
 
   render() {
-    console.warn('---Map: render->props: ', this.props);
-    console.warn('---Map: render->state: ', this.state);
+    //console.warn('---Map: render->props: ', this.props);
+    //console.warn('---Map: render->state: ', this.state);
     const googleMapURL = this.googleMapURL(this.props.maps_api_key)
-    console.warn('---Map: render->googleMapURL: ', googleMapURL);
+    //console.warn('---Map: render->googleMapURL: ', googleMapURL);
     return (
       <GMap
         googleMapURL={googleMapURL}

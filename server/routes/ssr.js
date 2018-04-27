@@ -72,6 +72,7 @@ function rootHandler(req, res) {
   }
 }
 
+router.get('/forgot', rootHandler);
 router.get('/reset/:token', rootHandler);
 router.get('/', rootHandler);
 router.get('/index.php', rootHandler);

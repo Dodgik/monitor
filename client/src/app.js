@@ -1,9 +1,10 @@
 import React, { PropTypes, Component } from 'react';
 import { Route } from 'react-router-dom';
 import Header from './components/Header';
-import { AuthPanel } from './components/Auth';
+import { AuthRoutes } from './components/Auth';
 import Map from './components/Map';
 import MenuItemView from './components/MenuItemView';
+import Forgot from './components/Auth/Forgot';
 
 
 class App extends Component {
@@ -29,7 +30,8 @@ class App extends Component {
       <div className={rootClassName}>
         <div className="panel">
           <Header onMenuClose={this.onMenuClose.bind(this)} />
-          <AuthPanel />
+
+          <AuthRoutes />
           <Route exact path='/' render={(props) => (
             <MenuItemView {...props} />
           )} />
